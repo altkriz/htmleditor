@@ -14,7 +14,7 @@ body{
   width: 100vw;
 /* height: 10vh;*/
   height: max(10vh, 100px);
-  background-color: black;
+  background-color: green;
   display : flex;
   align-items : center;
 }
