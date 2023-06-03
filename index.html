@@ -1,0 +1,31 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+ 	<title>Kriztech Editor</title>
+ 	<link rel="stylesheet" type="text/css" href="styles.css">
+ 	<script defer type="text/javascript" src="app.js"></script>
+ 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+	<script defer type="text/javascript" src="saveFile.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.0.0/split.min.js" integrity="sha512-tTsZnBXEzNdEaqUO9Ok8fUofS73xieiBa54pD/sxOSvayIgItM9MmEM0CnUjA13LDnJT22sfwmjf20+Bo2174g==" crossorigin="anonymous"></script>
+ </head>
+ <body>
+   <div class="nav_bar"><p>This is a navigation bar</p></div>
+ 	<div class="container split">
+
+		<button id="btn" onclick="saveFile()">
+			Save File
+		</button>
+				     					
+		<!-- Text area for Html Code  -->
+ 		<textarea id="htmlCode"  placeholder="Type HTML code here" spellcheck="false" oninput="update(0)" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}if(event.keyCode==8){update(1);}"></textarea>
+ 		<!-- Text area for Css Code  -->
+		<textarea id="cssCode"  placeholder="Type CSS code here" spellcheck="false" oninput="update(0)" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}if(event.keyCode==8){update(1);}"></textarea>
+ 		<!-- Text area for Javascript Code  -->
+		<textarea id="javascriptCode" spellcheck="false" placeholder="Type JavaScript code here" oninput="update(0)" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}if(event.keyCode==8){update(1);}"></textarea>
+ 	</div>
+ 	<div class="iframe-container split">
+ 		<iframe id="viewer"></iframe>
+ 	</div>
+	
+ </body>
+ </html>
