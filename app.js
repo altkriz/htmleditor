@@ -30,7 +30,7 @@ function compile() {
 }
 
 function setInitial(data) {
-  let htmlContent = data[0] || '<h1>Welcome to the Live Code Editor!</h1>';
+  let htmlContent = data[0] || '<h1>Welcome to the Kriztech Code Editor!</h1>';
   let cssContent =
     data[1] ||
     `body {
