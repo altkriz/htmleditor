@@ -51,7 +51,8 @@ h2 {
 }
 .editorContainer {
         
-  background-image: url('back.jpg');
+  /*background-image: url('back.jpg');*/
+  background-color: #339966 ;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position:center;
