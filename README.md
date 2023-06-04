@@ -10,7 +10,7 @@ This is a simple HTML editor. You can edit your HTML code and save it to a file.
 * [x] File Saving and Loading 
 * [x] User Friendly
 ## Screenshot 
-![frame_generic_light (1)](https://github.com/kraza1932000/htmleditor/assets/30174244/2b3a8783-685d-4dc8-9f8d-bd25286c20d2)
+![frame_generic_light (1)](kraza1932000.github.io/htmleditor/scr.png)
 
 ## Demo
 - [HTML Editor](https://kraza1932000.github.io/htmleditor)
