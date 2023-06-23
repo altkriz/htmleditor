@@ -101,6 +101,28 @@ document.querySelector('.copy-js').addEventListener('click', (e) => {
   copyCode(code);
 });
 
+function saveCode() {
+        // Get code from editor
+        const codes = `
+  ${html.value}
+  <style>${css.value}</style>
+  <script>${js.value}</script>
+`;
+        
+        // Send AJAX request to save.php to save code to file
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://kriztech.in/editor/save.php');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            alert('Code saved successfully!');
+          } else {
+            alert('Error saving code.');
+          }
+        };
+        xhr.send(`codes=${encodeURIComponent(code)}`);
+      }
+
 function copyCode(code) {
   code.select();
   document.execCommand('copy');
