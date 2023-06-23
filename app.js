@@ -109,11 +109,7 @@ function copyCode(code) {
 }
 function saveCode() {
         // Get code from editor
-        const codes = `
-  ${html.value}
-  <style>${css.value}</style>
-  <script>${js.value}</script>
-`;
+        const codes = output;
         
         // Send AJAX request to save.php to save code to file
         const xhr = new XMLHttpRequest();
