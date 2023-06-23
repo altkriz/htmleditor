@@ -188,3 +188,11 @@ h2 {
 .copy-btn:hover {
   background: #3a505871;
 }
+.button {
+        position: absolute;
+        top: 10px;
+        padding: 5px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
