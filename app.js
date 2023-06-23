@@ -101,6 +101,12 @@ document.querySelector('.copy-js').addEventListener('click', (e) => {
   copyCode(code);
 });
 
+
+function copyCode(code) {
+  code.select();
+  document.execCommand('copy');
+  swal('Copied!', 'You are ready to rock', 'success');
+}
 function saveCode() {
         // Get code from editor
         const codes = `
@@ -122,9 +128,3 @@ function saveCode() {
         };
         xhr.send(`codes=${encodeURIComponent(code)}`);
       }
-
-function copyCode(code) {
-  code.select();
-  document.execCommand('copy');
-  swal('Copied!', 'You are ready to rock', 'success');
-}
