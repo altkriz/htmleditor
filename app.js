@@ -106,3 +106,20 @@ function copyCode(code) {
   document.execCommand('copy');
   swal('Copied!', 'You are ready to rock', 'success');
 }
+function saveCode() {
+        // Get code from editor
+        const code = codeEditor.value;
+        
+        // Send AJAX request to save.php to save code to file
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://kriztech.in/editor/save.php');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            alert('Code saved successfully!');
+          } else {
+            alert('Error saving code.');
+          }
+        };
+        xhr.send(`code=${encodeURIComponent(code)}`);
+      }
