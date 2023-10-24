@@ -10,10 +10,9 @@ This is a simple HTML editor. You can edit your HTML code and save it to a file.
 * [x] Contact Us for Suggestions
 
 ## Screenshot 
-![frame_generic_light (1)](https://altkriz.github.io/htmleditor/scr.png)
-
-## Demo
-- [HTML Editor](https://altkriz.github.io/htmleditor)
+![Alt text](img/image.png)
+![Alt text](img/image-1.png)
+![Alt text](img/image-2.png)
 
 ## Installation
 * Clone Project on Github
