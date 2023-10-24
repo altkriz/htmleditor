@@ -25,7 +25,7 @@ git clone https://github.com/altkriz/htmleditor.git
 var editor = new HTMLEditor();
 editor.render();
 ```
-
+<h1>Author</h1> : <h2>Kashif Raza</h2> 
 
 ## Show your support
 Give a ⭐️ if this project helped you!
