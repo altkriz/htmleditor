@@ -215,3 +215,37 @@
   .social-icons a:hover {
   color: #555;
 }
+.gallery {
+  display: flex;
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.product {
+  width: 300px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.product img {
+  max-width: 100%;
+  height: auto;
+}
+
+.product h2 {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.product p {
+  font-size: 14px;
+  color: #777;
+}
+
+.product span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
