@@ -9,9 +9,32 @@
     
     <link rel="icon" type="image/x-icon" href="favicon.ico">
   </head>
+  <style>
+
+    .button save-button{
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      
+    }
+    .button run-button{
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .button download-button{
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+
+
+  </style>
   <body>
     <nav>
-      <a href="https://altkriz.github.io/htmleditor"><h1 style="color:black;">Kriztech Code Editor</h1></a>
+      
+      <a href="https://altkriz.github.io/htmleditor"><h1 style="color:rgb(255, 255, 255);" >  Kriztech Code Editor </h1></a>
       <ul> 
         <li><button id="block1-button">Home</button></li>
         <li><button id="block2-button">About</button></li>
@@ -27,7 +50,8 @@
       
       <!-- Output -->
       <div class="output">
-        <h2>Output <a href="https://kriztech.in/editor/code.html" target="_blank">View Output in New Window</a> Save before Opening New Window</h2>
+        <h2>Output <a href="https://kriztech.in/editor/code.html" target="_blank">View Output in New Window </a> <br><br> Save before Opening New Window</h2>
+       
         <iframe id="output"></iframe>
         <div class="button save-button" onclick="saveCode()">Save</div>
         <div class="button run-button"  onclick="runCode()">Run</div>
