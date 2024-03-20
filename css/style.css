@@ -101,7 +101,7 @@
     width: 100%;
     height: calc(100% - 80px);
     border: none;
-    cursor: url('cursor.png'), auto; 
+   
   }
   
   /* Save and run button styles */
@@ -112,7 +112,6 @@
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
-    cursor: pointer;
   }
   
   .save-button {
@@ -135,7 +134,6 @@
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
-  cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
