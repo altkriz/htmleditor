@@ -30,7 +30,7 @@
         
         // Send AJAX request to save.php to save code to file
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://kriztech.in/editor/save.php');
+        xhr.open('POST', 'https://app.kriztech.in/edit/save.php');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
         if (xhr.status === 200) {
