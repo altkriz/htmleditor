@@ -1,128 +1,335 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kriztech Editor</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-  </head>
-  <style>
+    <title>KrizCode Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Previous CSS remains the same until .editor-panel */
+        :root {
+            --primary-color: #007acc;
+            --dark-bg: #1e1e1e;
+            --text-light: #ffffff;
+        }
 
-    .button save-button{
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      
-    }
-    .button run-button{
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    }
-    .button download-button{
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
+        .navbar {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
 
-  </style>
-  <body>
-    <nav>
-      
-      <a href="https://altkriz.github.io/htmleditor"><h1 style="color:rgb(255, 255, 255);" >  Kriztech Code Editor </h1></a>
-      <ul> 
-        <li><button id="block1-button">Home</button></li>
-        <li><button id="block2-button">About</button></li>
-        <li><button id="block3-button">Contact Us</button></li>
-      </ul>
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            margin-top: 60px;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+            min-height: 300px;
+        }
+
+        .editor-panel {
+            background: var(--dark-bg);
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            height: 400px; /* Fixed height for editor boxes */
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%; /* Changed from flex: 1 to height: 100% */
+            background: #252526;
+            color: #d4d4d4;
+            border: none;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            resize: none;
+            border-radius: 3px;
+        }
+
+        /* Rest of the CSS remains the same */
+        #preview-container {
+            height: 500px;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .button-container {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .download-btn {
+            background: #4CAF50;
+        }
+
+        .about-section {
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .about-section h1 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .about-section p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            padding: 2rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .social-media-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-media-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .social-media-icons a:hover {
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-panel {
+                height: 200px; /* Reduced height for mobile */
+            }
+
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            #preview-container {
+                height: 400px;
+            }
+
+            .main-content {
+                margin-top: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HTML structure remains the same as previous version -->
+    <nav class="navbar">
+        <div class="logo">KrizCode</div>
+        <div class="nav-links">
+            <a href="#" onclick="showSection('editor')">Editor</a>
+            <a href="#" onclick="showSection('about')">About</a>
+        </div>
     </nav>
-    <div id="block1" class="block">
-      <!-- Editor -->
-      <div class="editor">
-        <h2>Code</h2>
-        <textarea id="code-editor"></textarea>
-      </div>
-      
-      <!-- Output -->
-      <div class="output">
-        <h2>Output <a href="https://app.kriztech.in/edit/code.html" target="_blank">View Output in New Window </a> <br><br> Save before Opening New Window</h2>
-       
-        <iframe id="output"></iframe>
-        <div class="button save-button" onclick="saveCode()">Save</div>
-        <div class="button run-button"  onclick="runCode()">Run</div>
-        <div class="button download-button"  onclick="downloadCode()">Download</div>
-       
-      </div>
+
+    <div class="main-content">
+        <div id="editor-section">
+            <div class="editor-container">
+                <div class="editor-panel">
+                    <div class="editor-header">HTML</div>
+                    <textarea id="html-code" placeholder="Enter HTML here...">&lt;h1&gt;Hello World&lt;/h1&gt;</textarea>
+                </div>
+                <div class="editor-panel">
+                    <div class="editor-header">CSS</div>
+                    <textarea id="css-code" placeholder="Enter CSS here...">h1 { color: blue; }</textarea>
+                </div>
+                <div class="editor-panel">
+                    <div class="editor-header">JavaScript</div>
+                    <textarea id="js-code" placeholder="Enter JavaScript here...">console.log('Hello from JS!');</textarea>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button onclick="updatePreview()">Update Preview</button>
+                <button onclick="openInNewTab()">Open in New Tab</button>
+                <button class="download-btn" onclick="downloadCode()">Download Code</button>
+            </div>
+
+            <div id="preview-container">
+                <iframe id="preview"></iframe>
+            </div>
+        </div>
+
+        <div class="about-section" id="about-section">
+            <h1>About Us</h1>
+            <p>Welcome to the Kriztech Code Editor! Our mission is to provide a simple and intuitive code editor that helps developers write and test their code quickly and efficiently. Our editor is designed with the needs of developers in mind, and we are constantly working to improve and add new features to make your coding experience even better.</p>
+            <p>At Kriztech, we believe that coding should be accessible to everyone, regardless of their background or experience level. That's why we offer our editor for free, and we are committed to providing high-quality resources and support to help you succeed in your coding journey.</p>
+            <p>Thank you for choosing Kriztech, and happy coding!</p>
+        </div>
     </div>
-    <div id="block2" class="block">
-      <h1>About Us</h1>
-      <p>Welcome to the Kriztech Code Editor! Our mission is to provide a simple and intuitive code editor that helps developers write and test their code quickly and efficiently. Our editor is designed with the needs of developers in mind, and we are constantly working to improve and add new features to make your coding experience even better.</p>
-      <p>At Kriztech, we believe that coding should be accessible to everyone, regardless of their background or experience level. That's why we offer our editor for free, and we are committed to providing high-quality resources and support to help you succeed in your coding journey.</p>
-      <p>Thank you for choosing Kriztech, and happy coding!</p>
-      <center>
-        <h2>Follow Us</h2> 
+
+    <footer>
         <div class="social-media-icons">
-          <a href="https://twitter.com/altkriz" target="_blank"><i class="fab fa-twitter fa-2x" style="color: #55acee;"></i></a>
-          <a href="https://www.facebook.com/k.raza193" target="_blank"><i class="fab fa-facebook-f fa-2x" style="color: #3b5998;"></i></i></a>
-          <a href="https://www.instagram.com/k.raza193" target="_blank"><i class="fab fa-instagram fa-2x" style="color: #ac2bac;"></i></i></a>
-          <a href="https://github.com/altkriz" target="_blank"><i class="fab fa-github fa-2x" style="color: #333333;"></i></i></i></a>
-          <a href="https://altkriz.github.io/" target="_blank"><i class="fa fa-globe fa-2x"></i></a>
+            <a href="https://twitter.com/altkriz" target="_blank"><i class="fab fa-twitter" style="color: #55acee;"></i></a>
+            <a href="https://www.facebook.com/k.raza193" target="_blank"><i class="fab fa-facebook-f" style="color: #3b5998;"></i></a>
+            <a href="https://www.instagram.com/k.raza193" target="_blank"><i class="fab fa-instagram" style="color: #ac2bac;"></i></a>
+            <a href="https://github.com/altkriz" target="_blank"><i class="fab fa-github" style="color: #333333;"></i></a>
+            <a href="https://altkriz.github.io/" target="_blank"><i class="fas fa-globe" style="color: #4CAF50;"></i></a>
         </div>
-      </center>
-      <div class="gallery">
-        <div class="product">
-            <img src="https://altkriz.github.io/img/krizbio.png" alt="Product 1">
-            <h2>KrizBio Shortlink & Bio Maker</h2>
-            <p>KrizBio by Kriztech: Your hub for free and fabulous web tools, 
-              including bio link pages, short links, ping services, 
-              SHA generation, QR codes, and more. 
-              Explore limitless digital possibilities with us!</p>
-              <a href="https://bio.kriztech.in"><span>Explore KrizBio</span></a>
-        </div>
-        <div class="product">
-            <img src="https://altkriz.github.io/htmleditor/img/kriznews.png" alt="Product 2">
-            <h2>KrizNews</h2>
-            <p>KrizNews by Kriztech: Your source for compelling and concise news updates, 
-              keeping you informed and inspired. Dive into a world of knowledge at your fingertips.</p>
-              <a href="https://news.kriztech.in"><span>Explore KrizNews</span></a>
-        </div>
-        <div class="product">
-          <img src="https://altkriz.github.io/htmleditor/img/blog.png" alt="Product 2">
-          <h2>KriztechBlogs</h2>
-          <p>KriztechBlogs: Your go-to source for IT and tech-related blogs, 
-            offering insights, expertise, and knowledge in a nutshell. Stay updated and informed.</p>
-          <a href="https://kriztechblogs.blogspot.com"><span>Explore KriztechBlogs</span></a>
-      </div>
-      <div class="product">
-        <img src="https://altkriz.github.io/htmleditor/img/blog.png" alt="Product 2">
-        <h2>KriztechBlogs</h2>
-        <p>KriztechBlogs: Your go-to source for IT and tech-related blogs, 
-          offering insights, expertise, and knowledge in a nutshell. Stay updated and informed.</p>
-        <a href="https://kriztechblogs.blogspot.com"><span>Explore KriztechBlogs</span></a>
-    </div>
-    </div>
-    </div>
-    <div id="block3" class="block">
-      <h1>Contact Us</h1>
-      <form id="contact-form">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br>
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea><br>
-        <button type="submit">Send</button>
-      </form>
-      <div id="response"></div>
-    </div>
-    <!-- JavaScript --> 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/main.js"></script>
-  </body>
+        <p style="margin-top: 1rem;">© 2023 KrizCode. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript remains the same as previous version
+        function showSection(sectionId) {
+            document.getElementById('editor-section').style.display = 
+                sectionId === 'editor' ? 'block' : 'none';
+            document.getElementById('about-section').style.display = 
+                sectionId === 'about' ? 'block' : 'none';
+        }
+
+        function getCombinedCode() {
+            const html = document.getElementById('html-code').value;
+            const css = document.getElementById('css-code').value;
+            const js = document.getElementById('js-code').value;
+
+            return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Code</title>
+    <style>
+        ${css}
+    </style>
+</head>
+<body>
+    ${html}
+    <script>
+        ${js}
+    <\/script>
+</body>
+</html>`;
+        }
+
+        function updatePreview() {
+            const previewFrame = document.getElementById('preview');
+            previewFrame.srcdoc = getCombinedCode();
+        }
+
+        function openInNewTab() {
+            const newWindow = window.open();
+            newWindow.document.open();
+            newWindow.document.write(getCombinedCode());
+            newWindow.document.close();
+        }
+
+        function downloadCode() {
+            const combinedCode = getCombinedCode();
+            const blob = new Blob([combinedCode], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'combined-code.html';
+            document.body.appendChild(a);
+            a.click();
+            
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-update preview while typing
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', updatePreview);
+        });
+
+        // Initial preview
+        updatePreview();
+    </script>
+</body>
 </html>
