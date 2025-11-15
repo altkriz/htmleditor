@@ -1,127 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KrizCode Editor</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>KrizCode Editor — KrizVibe AI</title>
 
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-  <style>
-    :root{
-      --bg:#0f1720;
-      --panel:#111214;
-      --muted:#9aa4b2;
-      --accent:#0078d4;
-      --glass: rgba(255,255,255,0.03);
-      --success:#4caf50;
-      --danger:#e05656;
-    }
-    /* Light theme overrides (applied when body has .light) */
-    body.light{
-      --bg: #f6f8fb;
-      --panel: #ffffff;
-      --muted: #475569;
-      --accent: #0b5cff;
-      --glass: rgba(2,6,23,0.03);
-      --success: #2e7d32;
-      --danger: #c62828;
-      color-scheme: light;
-    }
-    *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
-  /* Use CSS variable for background so theme toggle can update it */
+<style>
+  :root{
+    --bg:#0f1720; --panel:#111214; --muted:#9aa4b2; --accent:#0078d4;
+    --glass: rgba(255,255,255,0.03); --success:#4caf50; --danger:#e05656;
+  }
+  body.light{ --bg:#f6f8fb; --panel:#ffffff; --muted:#475569; --accent:#0b5cff; color-scheme:light; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;}
   body{background:var(--bg);color:var(--muted);display:flex;flex-direction:column;min-height:100vh;transition:background .2s,color .15s}
-    /* Navbar */
-    .navbar{height:56px;padding:8px 14px;background:var(--panel);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.03);}
-    .nav-left{display:flex;align-items:center;gap:12px}
-    .logo{font-weight:700;color:var(--accent);font-size:1.05rem}
-    .nav-actions{display:flex;gap:8px;align-items:center}
-    .icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:6px 10px;border-radius:6px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
-    .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
-    /* Container layout */
-   /* Keep a sensible minimum width for the editor column and allow toolbar wrapping
-     to avoid buttons overflowing into the preview column on narrow screens */
-   .container{display:grid;grid-template-columns:minmax(320px, 1fr) 2fr;gap:12px;padding:12px;height:calc(100vh - 56px);overflow:hidden}
-    /* Editor column */
-    .left-col{display:flex;flex-direction:column;background:var(--panel);border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,0.03);min-width:320px}
-    .tabs{display:flex;gap:6px;margin-bottom:8px}
-    .tab{padding:8px 12px;border-radius:8px;cursor:pointer;background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
-    .tab.active{background:linear-gradient(90deg, rgba(0,120,212,0.12), rgba(0,120,212,0.06));color:var(--accent);font-weight:600;border-color:rgba(0,120,212,0.25)}
-   .editor-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-   /* Prevent buttons from breaking into multiple visual lines oddly and
-     avoid allowing their contents to wrap inside the button */
-   .editor-toolbar .btn, .editor-toolbar .icon-btn, .nav-actions .icon-btn{white-space:nowrap}
-   /* Allow the right column to shrink properly inside the grid layout (prevents overflow issues) */
-   .right-col{min-width:0}
-    .small-input{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 8px;border-radius:6px}
-    .btn{background:var(--accent);color:white;padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-    .btn.danger{background:var(--danger)}
-    .editor-area{flex:1;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
-    /* Preview column */
-    .right-col{display:flex;flex-direction:column;border-radius:10px;overflow:hidden}
-    .preview-top{padding:10px;background:var(--panel);border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .preview-iframe{flex:1;background:white;border:none;width:100%}
-    /* Side panel (saved projects) */
-    .side-panel{position:fixed;left:12px;top:70px;width:320px;height:calc(100vh - 84px);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px);border-radius:10px;padding:12px;overflow:auto;box-shadow:0 8px 30px rgba(2,6,23,0.6);transform:translateX(-380px);transition:transform .25s ease;z-index:60}
-    .side-panel.open{transform:translateX(0)}
-    .side-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .proj-list{display:flex;flex-direction:column;gap:8px}
-    .proj-item{padding:8px;border-radius:8px;background:var(--glass);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
-    .proj-item .meta{font-size:13px;color:var(--muted)}
-    .proj-actions{display:flex;gap:6px}
-    /* Modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:90}
-    .modal-backdrop.show{display:flex}
-    .modal{background:var(--panel);padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);width:320px;max-width:94%}
-    .modal h3{margin:0 0 8px 0;color:var(--accent)}
-    .modal p{color:var(--muted);font-size:14px;margin-bottom:12px}
-    .modal .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
-    /* small helpers */
-    .muted{color:var(--muted);font-size:13px}
-    .flex{display:flex;gap:8px}
-  /* Social square curved buttons in About (small rounded squares) */
+  .navbar{height:56px;padding:8px 14px;background:var(--panel);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.03)}
+  .nav-left{display:flex;align-items:center;gap:12px}
+  .logo{font-weight:700;color:var(--accent);font-size:1.05rem}
+  .nav-actions{display:flex;gap:8px;align-items:center}
+  .icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:6px 10px;border-radius:6px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .container{display:grid;grid-template-columns:minmax(320px, 1fr) 2fr;gap:12px;padding:12px;height:calc(100vh - 56px);overflow:hidden}
+  .left-col{display:flex;flex-direction:column;background:var(--panel);border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,0.03);min-width:320px}
+  .tabs{display:flex;gap:6px;margin-bottom:8px}
+  .tab{padding:8px 12px;border-radius:8px;cursor:pointer;background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+  .tab.active{background:linear-gradient(90deg, rgba(0,120,212,0.12), rgba(0,120,212,0.06));color:var(--accent);font-weight:600;border-color:rgba(0,120,212,0.25)}
+  .editor-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .small-input{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 8px;border-radius:6px}
+  .btn{background:var(--accent);color:white;padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
+  .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  .btn.danger{background:var(--danger)}
+  .editor-area{flex:1;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+  .right-col{display:flex;flex-direction:column;border-radius:10px;overflow:hidden;min-width:0}
+  .preview-top{padding:10px;background:var(--panel);border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .preview-iframe{flex:1;background:white;border:none;width:100%}
+  .side-panel{position:fixed;left:12px;top:70px;width:320px;height:calc(100vh - 84px);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px);border-radius:10px;padding:12px;overflow:auto;box-shadow:0 8px 30px rgba(2,6,23,0.6);transform:translateX(-380px);transition:transform .25s ease;z-index:60}
+  .side-panel.open{transform:translateX(0)}
+  .side-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .proj-list{display:flex;flex-direction:column;gap:8px}
+  .proj-item{padding:8px;border-radius:8px;background:var(--glass);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
+  .proj-item .meta{font-size:13px;color:var(--muted)}
+  .proj-actions{display:flex;gap:6px}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:90}
+  .modal-backdrop.show{display:flex}
+  .modal{background:var(--panel);padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);width:320px;max-width:94%}
+  .muted{color:var(--muted);font-size:13px}
+  .flex{display:flex;gap:8px}
   .social-media-icons a.social-square{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;color:#fff;text-decoration:none;box-shadow:0 6px 18px rgba(2,6,23,0.35);transition:transform .12s ease,box-shadow .12s ease,opacity .12s}
-  .social-media-icons a.social-square i{font-size:18px;line-height:1}
-  /* Make SVG icons fill the rounded-square container completely while keeping small inner padding
-    so the glyph isn't clipped. This makes the icon occupy the available area (100%). */
-  .social-media-icons a.social-square svg{width:100%;height:100%;padding:6px;box-sizing:border-box;display:block}
-  /* Remove extra font-size growth for icon fonts (we rely on SVG sizing now) */
-  .social-media-icons a.social-square i{font-size:inherit}
-  .social-media-icons a.social-square:hover{transform:translateY(-4px);box-shadow:0 10px 26px rgba(2,6,23,0.45);opacity:0.98}
-  .social-square.twitter{background:#0f1724} /* dark rounded square for X */
-  .social-square.facebook{background:#1877f2}
-  .social-square.instagram{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
-  .social-square.github{background:#0d1117}
-  .social-square.site{background:#16a34a}
-  /* About page styles */
   .about-section h1{font-size:1.6rem}
   .about-section p{line-height:1.6;color:var(--muted)}
-  .about-section footer a{opacity:0.95}
-    @media (max-width:900px){
-      .container{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:calc(100vh - 56px);padding:8px}
-      .left-col{min-height:320px}
-      .side-panel{left:8px;top:64px}
-    }
-  </style>
+  /* AI Button (rounded square image) */
+  .ai-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:6px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer;overflow:hidden;
+  }
+  .ai-btn img.ai-icon{width:36px;height:36px;object-fit:cover;border-radius:8px;display:block}
+  .ai-btn .ai-label{font-weight:600;color:var(--muted);font-size:13px}
+  /* KrizVibe AI Slide panel (from right) */
+  .ai-panel{
+    position:fixed;right:12px;top:70px;width:420px;height:calc(100vh - 84px);background:var(--panel);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.6);transform:translateX(110%);transition:transform .28s cubic-bezier(.2,.9,.3,1);z-index:120;overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.04)
+  }
+  .ai-panel.open{transform:translateX(0)}
+  .ai-panel .ai-header{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid rgba(255,255,255,0.03)}
+  .ai-panel .ai-header img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+  .ai-panel .ai-messages{flex:1;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:8px}
+  .ai-msg{max-width:86%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);color:var(--muted);font-size:14px}
+  .ai-msg.user{align-self:flex-end;background:linear-gradient(90deg, rgba(0,120,212,0.12), rgba(0,120,212,0.06));color:var(--accent)}
+  .ai-input{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,0.03);background:var(--panel)}
+  .ai-input textarea{flex:1;height:68px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);resize:none}
+  .ai-input .controls{display:flex;flex-direction:column;gap:8px}
+  .ai-panel .ai-footer{padding:10px;border-top:1px solid rgba(255,255,255,0.03);display:flex;gap:8px;align-items:center}
+  .small-muted{font-size:12px;color:var(--muted)}
+  @media (max-width:900px){
+    .container{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:calc(100vh - 56px);padding:8px}
+    .left-col{min-height:320px}
+    .ai-panel{width:calc(100% - 24px);right:12px;top:64px;height:calc(100vh - 76px)}
+  }
+</style>
 </head>
 <body>
 
   <div class="navbar">
     <div class="nav-left">
       <div class="logo"><i class="fa-solid fa-code"></i> KrizCode Editor</div>
-      
     </div>
 
     <div class="nav-actions">
       <button class="icon-btn" id="toggle-side"><i class="fa-solid fa-folder-open"></i> Projects</button>
       <button class="icon-btn" id="new-project-btn"><i class="fa-solid fa-file-circle-plus"></i> New</button>
       <button class="icon-btn" id="save-project-btn"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-  <!-- Tests button removed (tests should not be embedded inside the app) -->
-      <button class="icon-btn" id="theme-toggle" title="Toggle day/night"><i class="fa-solid fa-sun"></i></button>
+      <button class="icon-btn" id="theme-toggle" title="Toggle day/night"><i class="fa-solid fa-moon"></i></button>
       <button class="icon-btn" id="about-btn" title="About KrizCode"><i class="fa-solid fa-circle-info"></i> About</button>
+
+      <!-- AI button (rounded-square image) -->
+      <button class="ai-btn" id="ai-open-btn" aria-label="Open KrizVibe AI">
+        <img src="img/robot.jpg" alt="KrizVibe AI" class="ai-icon" />
+        <span class="ai-label">KrizVibe AI</span>
+      </button>
     </div>
   </div>
 
@@ -156,27 +132,13 @@
     </div>
   </div>
 
-  <!-- About section (hidden by default). Displayed when About button clicked -->
+  <!-- About section -->
   <div id="about-section" class="about-section" style="display:none;padding:28px;max-width:980px;margin:18px auto;color:var(--muted);">
     <div style="background:var(--panel);padding:24px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);">
-        <h1 style="margin-top:0;color:var(--accent);">About Us</h1>
-        <p>Welcome to the Kriztech Code Editor! Our mission is to provide a simple and intuitive code editor that helps developers write and test their code quickly and efficiently. Our editor is designed with the needs of developers in mind, and we are constantly working to improve and add new features to make your coding experience even better.</p>
-        <p>At Kriztech, we believe that coding should be accessible to everyone, regardless of their background or experience level. That's why we offer our editor for free, and we are committed to providing high-quality resources and support to help you succeed in your coding journey.</p>
-        <p>Thank you for choosing Kriztech, and happy coding!</p>
+      <h1 style="margin-top:0;color:var(--accent);">About KrizCode & KrizVibe</h1>
+      <p>Welcome to KrizCode — now with KrizVibe AI: an integrated code-generator assistant. Generate complete HTML/CSS/JS pages or components, and inject them straight into the editor.</p>
+      <p>This editor uses Monaco Editor, localStorage project management, autosave drafts, and a clean VS Code-like interface.</p>
     </div>
-
-    <footer style="margin-top:18px;text-align:center;color:var(--muted);">
-    <div class="social-media-icons" style="display:flex;gap:12px;justify-content:center;align-items:center;font-size:20px">
-            <a class="social-square twitter" href="https://x.com/altkriz" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)"> <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="28" height="28" viewBox="0 0 50 50" style="fill:currentColor;" aria-hidden="true" focusable="false">
-                <path d="M 11 4 C 7.134 4 4 7.134 4 11 L 4 39 C 4 42.866 7.134 46 11 46 L 39 46 C 42.866 46 46 42.866 46 39 L 46 11 C 46 7.134 42.866 4 39 4 L 11 4 z M 13.085938 13 L 21.023438 13 L 26.660156 21.009766 L 33.5 13 L 36 13 L 27.789062 22.613281 L 37.914062 37 L 29.978516 37 L 23.4375 27.707031 L 15.5 37 L 13 37 L 22.308594 26.103516 L 13.085938 13 z M 16.914062 15 L 31.021484 35 L 34.085938 35 L 19.978516 15 L 16.914062 15 z"></path>
-              </svg></a>
-            <a class="social-square facebook" href="https://www.facebook.com/k.raza193" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a class="social-square instagram" href="https://www.instagram.com/k.raza193" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-square github" href="https://github.com/altkriz" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-            <a class="social-square site" href="https://altkriz.github.io/" target="_blank" rel="noopener noreferrer" aria-label="Website"><i class="fa-solid fa-globe"></i></a>
-    </div>
-        <p style="margin-top: 1rem;">© 2023 KrizCode. All rights reserved.</p>
-    </footer>
   </div>
 
   <!-- Side panel: saved projects -->
@@ -184,7 +146,7 @@
     <div class="side-header">
       <div style="display:flex;flex-direction:column">
         <strong>Saved Projects</strong>
-        <span class="muted">localStorage — stored on this browser</span>
+        <span class="muted">localStorage — stored locally in this browser</span>
       </div>
       <div>
         <button class="icon-btn" id="close-side"><i class="fa-solid fa-xmark"></i></button>
@@ -201,9 +163,7 @@
       <button class="icon-btn" id="clear-drafts">Clear Drafts</button>
     </div>
 
-    <div class="proj-list" id="proj-list">
-      <!-- Projects will be listed here -->
-    </div>
+    <div class="proj-list" id="proj-list"></div>
   </div>
 
   <!-- Modal: require filename for download -->
@@ -219,35 +179,60 @@
     </div>
   </div>
 
+  <!-- KrizVibe AI Panel (slide from right) -->
+  <div class="ai-panel" id="ai-panel" aria-hidden="true">
+    <div class="ai-header">
+      <img src="img/robot.jpg" alt="KrizVibe AI" />
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px">
+          <strong style="color:var(--accent)">KrizVibe AI</strong>
+          <span class="small-muted"> — web-builder (temperature 1.0)</span>
+        </div>
+        <div class="small-muted" style="font-size:12px;margin-top:6px">Tip: ask "Create a minimal portfolio page" or "Generate a hero + 3 cards".</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="icon-btn" id="ai-close"><i class="fa-solid fa-xmark"></i></button>
+        <button class="icon-btn" id="ai-settings" title="Toggle auto-insert"><i class="fa-solid fa-gear"></i></button>
+      </div>
+    </div>
+
+    <div class="ai-messages" id="ai-messages" role="log" aria-live="polite"></div>
+
+    <div class="ai-input">
+      <textarea id="ai-input" placeholder="Ask KrizVibe to build a page..."></textarea>
+      <div class="controls">
+        <button class="btn" id="ai-send">Send</button>
+        <button class="btn secondary" id="ai-insert-manual" title="Insert parsed code into editor (manual)">Insert</button>
+      </div>
+    </div>
+
+    <div class="ai-footer" style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-top:1px solid rgba(255,255,255,0.03)">
+      <div class="small-muted">Auto-insert: <span id="ai-auto-insert">ON</span></div>
+      <div class="small-muted">Mode: <strong>Web Builder</strong></div>
+    </div>
+  </div>
+
   <!-- Monaco loader -->
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
 
   <script>
   (function(){
-    // ---- LocalStorage helpers ----
+    // -----------------------
+    // Basic utilities & config
+    // -----------------------
     const STORAGE_KEY = 'krizcode_projects_v1';
-    function loadProjects(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return JSON.parse(raw || '[]');
-      } catch(e){
-        console.warn('loadProjects: localStorage read failed', e);
-        return [];
-      }
-    }
-    function saveProjects(arr){
-      try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-      } catch(e){
-        console.warn('saveProjects: localStorage write failed', e);
-        // best-effort: surface to user
-        try{ alert('Unable to save projects: storage error.'); }catch(_){ /* ignore */ }
-      }
-    }
+    const THEME_KEY = 'krizcode_theme';
+    const AI_TEMP = 1.0; // required temperature
+    const AI_ENDPOINT_DEFAULT = 'https://text.pollinations.ai/openai'; // user can change at runtime
+    const AI_MODEL_DEFAULT = 'openai';
 
-    function nowISO(){ return new Date().toISOString() }
+    function nowISO(){ return new Date().toISOString(); }
+    function loadProjects(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){return []} }
+    function saveProjects(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){ console.warn('saveProjects failed', e); } }
 
-    // ---- UI elements ----
+    // -----------------------
+    // Elements
+    // -----------------------
     const sidePanel = document.getElementById('side-panel');
     const toggleSideBtn = document.getElementById('toggle-side');
     const closeSideBtn = document.getElementById('close-side');
@@ -258,8 +243,6 @@
     const saveProjectBtn = document.getElementById('save-project-btn');
     const importSampleBtn = document.getElementById('import-sample');
     const clearDraftsBtn = document.getElementById('clear-drafts');
-
-    // Editor UI
     const tabs = document.querySelectorAll('.tab');
     const editorContainer = document.getElementById('editor-area');
     const runBtn = document.getElementById('run-btn');
@@ -273,51 +256,41 @@
     const previewFrame = document.getElementById('preview-frame');
     const previewUpdated = document.getElementById('preview-updated');
     const autosaveStatus = document.getElementById('autosave-status');
-  const aboutBtn = document.getElementById('about-btn');
-  const aboutSectionEl = document.getElementById('about-section');
-  const themeToggleBtn = document.getElementById('theme-toggle');
+    const aboutBtn = document.getElementById('about-btn');
+    const aboutSectionEl = document.getElementById('about-section');
+    const themeToggleBtn = document.getElementById('theme-toggle');
 
-  // Theme helpers
-  const THEME_KEY = 'krizcode_theme';
-  function applyTheme(theme){
-    try{
-      document.body.classList.toggle('light', theme === 'light');
-      localStorage.setItem(THEME_KEY, theme);
-      // update theme icon
-      if(themeToggleBtn){
-        themeToggleBtn.innerHTML = theme === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-      }
-      // try to set Monaco theme if available
-      try{ if(window.monaco && monaco.editor){ monaco.editor.setTheme(theme === 'light' ? 'vs' : 'vs-dark'); } }catch(_){ }
-    }catch(e){ console.warn('applyTheme error', e); }
-  }
+    // AI elements
+    const aiOpenBtn = document.getElementById('ai-open-btn');
+    const aiPanel = document.getElementById('ai-panel');
+    const aiCloseBtn = document.getElementById('ai-close');
+    const aiSendBtn = document.getElementById('ai-send');
+    const aiMessagesEl = document.getElementById('ai-messages');
+    const aiInputEl = document.getElementById('ai-input');
+    const aiAutoInsertEl = document.getElementById('ai-auto-insert');
+    const aiInsertManualBtn = document.getElementById('ai-insert-manual');
+    const aiSettingsBtn = document.getElementById('ai-settings');
 
-  // determine initial theme
-  let savedTheme = localStorage.getItem(THEME_KEY);
-  if(!savedTheme){
-    savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-  }
-  // apply initial theme (Monaco will be updated again after load)
-  applyTheme(savedTheme);
+    // Theme
+    function applyTheme(theme){
+      try{
+        document.body.classList.toggle('light', theme === 'light');
+        localStorage.setItem(THEME_KEY, theme);
+        if(themeToggleBtn){
+          themeToggleBtn.innerHTML = theme === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+        }
+        try{ if(window.monaco && monaco.editor){ monaco.editor.setTheme(theme === 'light' ? 'vs' : 'vs-dark'); } }catch(_){}
+      }catch(e){ console.warn(e); }
+    }
+    let savedTheme = localStorage.getItem(THEME_KEY) || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
+    applyTheme(savedTheme);
+    if(themeToggleBtn){ themeToggleBtn.addEventListener('click', ()=> applyTheme(document.body.classList.contains('light') ? 'dark' : 'light')); }
 
-  if(themeToggleBtn){
-    themeToggleBtn.addEventListener('click', ()=>{
-      const current = document.body.classList.contains('light') ? 'light' : 'dark';
-      const next = current === 'light' ? 'dark' : 'light';
-      applyTheme(next);
-    });
-  }
-
-    // Editor state & autosave
-    let editor; // monaco editor instance
-    let models = {}; // {html: model, css: model, js: model}
-    let activeTab = 'html';
-    let currentLoadedProjectId = null; // id of loaded project
-    let autosaveTimer = null;
-    const AUTOSAVE_IDLE_MS = 3000; // 3s idle
-    let autoSaveEnabled = true;
-
-    // Default sample
+    // -----------------------
+    // Editor & models (Monaco)
+    // -----------------------
+    let editor, models = {}, activeTab = 'html', currentLoadedProjectId = null, autosaveTimer = null;
+    const AUTOSAVE_IDLE_MS = 3000;
     const SAMPLE = {
       name: 'Sample Page',
       html: '<h1>Hello from KrizCode</h1>\n<p>Edit the HTML, CSS and JS tabs.</p>',
@@ -325,553 +298,328 @@
       js: 'console.log("Hello KrizCode");'
     };
 
-    // ---- Monaco Init ----
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
     require(['vs/editor/editor.main'], function() {
-
-      // Create models
       models.html = monaco.editor.createModel(SAMPLE.html, 'html');
-      models.css = monaco.editor.createModel(SAMPLE.css, 'css');
-      models.js  = monaco.editor.createModel(SAMPLE.js, 'javascript');
+      models.css  = monaco.editor.createModel(SAMPLE.css, 'css');
+      models.js   = monaco.editor.createModel(SAMPLE.js, 'javascript');
 
-      // Create the single editor and attach default model (html)
       editor = monaco.editor.create(editorContainer, {
-        model: models.html,
-        theme: 'vs-dark',
-        automaticLayout: true,
-        fontFamily: 'Consolas, "Courier New", monospace',
-        fontSize: 13,
-        minimap: { enabled: false },
-        scrollbar: { verticalScrollbarSize: 10, horizontalScrollbarSize: 10 }
+        model: models.html, theme: (document.body.classList.contains('light') ? 'vs' : 'vs-dark'),
+        automaticLayout:true, fontFamily:'Consolas, "Courier New", monospace', fontSize:13, minimap:{enabled:false}
       });
 
-      // Ensure Monaco matches selected theme (applyTheme will attempt to set it too)
-      try{ if(typeof savedTheme !== 'undefined') applyTheme(savedTheme); }catch(_){ }
+      // ensure theme applied
+      try{ monaco.editor.setTheme(document.body.classList.contains('light') ? 'vs' : 'vs-dark'); }catch(_){}
 
-      // Tab switching logic (switch model)
-      tabs.forEach(t => {
-        t.addEventListener('click', () => {
-          const tabName = t.dataset.tab;
-          activateTab(tabName);
-        });
-      });
+      tabs.forEach(t => t.addEventListener('click', ()=> {
+        const tabName = t.dataset.tab; activeTab = tabName; tabs.forEach(tb => tb.classList.toggle('active', tb.dataset.tab === tabName));
+        editor.setModel(models[tabName]); editor.focus();
+      }));
 
-      function activateTab(name){
-        activeTab = name;
-        tabs.forEach(tb => tb.classList.toggle('active', tb.dataset.tab === name));
-        editor.setModel(models[name]);
-        editor.focus();
-      }
+      // updates
+      function updatePreviewDebounced(){ if(window._pv_timeout) clearTimeout(window._pv_timeout); window._pv_timeout = setTimeout(updatePreview, 200); }
+      function scheduleAutoSave(){ autosaveStatus.textContent='pending...'; if(autosaveTimer) clearTimeout(autosaveTimer); autosaveTimer = setTimeout(()=>{ autosaveStatus.textContent='saving…'; performAutoSave(); }, AUTOSAVE_IDLE_MS); }
 
-      // Editor change handlers -> update preview & autosave timer
-      function scheduleAutoSave(){
-        autosaveStatus.textContent = 'pending...';
-        if(autosaveTimer) clearTimeout(autosaveTimer);
-        autosaveTimer = setTimeout(()=> {
-          autosaveStatus.textContent = 'saving…';
-          performAutoSave();
-        }, AUTOSAVE_IDLE_MS);
-      }
-
-      editor.onDidChangeModelContent(() => {
-        updatePreviewDebounced();
-        scheduleAutoSave();
-      });
-
-      // also listen to model changes on all models (since setModel won't trigger)
-      Object.values(models).forEach(m => {
-        m.onDidChangeContent(() => {
-          updatePreviewDebounced();
-          scheduleAutoSave();
-        });
-      });
-
-      // ---- Preview update ----
-      let previewTimer = null;
-      function updatePreviewDebounced(){
-        if(previewTimer) clearTimeout(previewTimer);
-        previewTimer = setTimeout(updatePreview, 200);
-      }
+      editor.onDidChangeModelContent(()=>{ updatePreviewDebounced(); scheduleAutoSave(); });
+      Object.values(models).forEach(m => m.onDidChangeContent(()=>{ updatePreviewDebounced(); scheduleAutoSave(); }));
 
       function getCombinedHTML(){
         const html = models.html.getValue();
-        const css = models.css.getValue();
-        const js  = models.js.getValue();
-        return `<!doctype html>
-<html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<style>${css}</style>
-</head>
-<body>
-${html}
-<script>
-${js}
-<\/script>
-</body>
-</html>`;
+        const css  = models.css.getValue();
+        const js   = models.js.getValue();
+        return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
       }
 
-      function updatePreview(){
-        const content = getCombinedHTML();
-        previewFrame.srcdoc = content;
-        previewUpdated.textContent = 'Last update: ' + new Date().toLocaleTimeString();
-      }
+      function updatePreview(){ previewFrame.srcdoc = getCombinedHTML(); previewUpdated.textContent = 'Last update: ' + new Date().toLocaleTimeString(); }
 
-      // Run on load
+      // initial
       updatePreview();
 
-      // small helpers for safety and accessibility
-      let lastActiveElement = null;
-      function sanitizeFilename(name){
-        // replace invalid filesystem chars, trim and limit length
-        if(!name) return '';
-        return name.replace(/[\\\/\:\*\?"<>\|]+/g, '-').trim().slice(0, 200);
-      }
-
-      function setSideOpen(open){
-        sidePanel.classList.toggle('open', !!open);
-        sidePanel.setAttribute('aria-hidden', String(!open));
-      }
-
-      // ---- Autosave & Projects ----
+      // Autosave & projects
       function performAutoSave(){
-        try {
-          const draft = {
-            id: 'draft',
-            name: 'Draft (local)',
-            html: models.html.getValue(),
-            css: models.css.getValue(),
-            js: models.js.getValue(),
-            updated: nowISO()
-          };
-          // store as a special draft project (id = draft)
-          let projects = loadProjects();
-          const draftIndex = projects.findIndex(p => p.id === 'draft');
-          if(draftIndex >= 0) projects[draftIndex] = draft;
-          else projects.unshift(draft);
-          saveProjects(projects);
-          renderProjects();
-          autosaveStatus.textContent = 'saved';
-          // If an actual project is currently loaded, update it too (auto-update)
-          if(currentLoadedProjectId && currentLoadedProjectId !== 'draft'){
-            updateLoadedProjectContent();
-          }
-        } catch(e){
-          console.error('AutoSave failed', e);
-          autosaveStatus.textContent = 'error';
-        } finally {
-          setTimeout(()=> autosaveStatus.textContent = 'on', 800);
-        }
+        try{
+          const draft = { id:'draft', name:'Draft (local)', html:models.html.getValue(), css:models.css.getValue(), js:models.js.getValue(), updated:nowISO() };
+          let projects = loadProjects(); const idx = projects.findIndex(p=>p.id==='draft');
+          if(idx>=0) projects[idx]=draft; else projects.unshift(draft);
+          saveProjects(projects); renderProjects(); autosaveStatus.textContent='saved';
+          if(currentLoadedProjectId && currentLoadedProjectId !== 'draft') updateLoadedProjectContent();
+        }catch(e){ autosaveStatus.textContent='error'; console.warn(e); } finally { setTimeout(()=> autosaveStatus.textContent='on', 700); }
       }
 
       function updateLoadedProjectContent(){
-        const projects = loadProjects();
-        const idx = projects.findIndex(p => p.id === currentLoadedProjectId);
-        if(idx >= 0){
-          projects[idx].html = models.html.getValue();
-          projects[idx].css = models.css.getValue();
-          projects[idx].js  = models.js.getValue();
-          projects[idx].updated = nowISO();
-          saveProjects(projects);
-          renderProjects();
-        }
+        const projects = loadProjects(); const idx = projects.findIndex(p=>p.id===currentLoadedProjectId);
+        if(idx>=0){ projects[idx].html = models.html.getValue(); projects[idx].css = models.css.getValue(); projects[idx].js = models.js.getValue(); projects[idx].updated = nowISO(); saveProjects(projects); renderProjects(); }
       }
 
-      // Save As (explicit)
       saveAsBtn.addEventListener('click', ()=>{
-        const name = (projectNameInput.value || '').trim();
-        if(!name){
-          alert('Please provide a project name in the input to save.');
-          projectNameInput.focus();
-          return;
-        }
-        const projects = loadProjects();
-        const newProj = {
-          id: 'p_' + Date.now(),
-          name,
-          html: models.html.getValue(),
-          css: models.css.getValue(),
-          js: models.js.getValue(),
-          updated: nowISO()
-        };
-        projects.unshift(newProj); // newest first
-        saveProjects(projects);
-        currentLoadedProjectId = newProj.id;
-        renderProjects();
-        alert('Saved project: ' + name);
+        const name = (projectNameInput.value||'').trim(); if(!name){ alert('Please provide a project name'); projectNameInput.focus(); return; }
+        const projects = loadProjects(); const newProj = { id:'p_'+Date.now(), name, html:models.html.getValue(), css:models.css.getValue(), js:models.js.getValue(), updated:nowISO() };
+        projects.unshift(newProj); saveProjects(projects); currentLoadedProjectId=newProj.id; renderProjects(); alert('Saved project: '+name);
       });
 
-      // Save (updates loaded project or acts like Save As)
       saveProjectBtn.addEventListener('click', ()=>{
         if(currentLoadedProjectId){
           if(currentLoadedProjectId === 'draft'){
-            // convert draft to new project; require name
-            const name = (projectNameInput.value || '').trim();
-            if(!name){ alert('Enter a project name to save draft as a project.'); projectNameInput.focus(); return; }
-            const projects = loadProjects().filter(p => p.id !== 'draft');
-            const newProj = {
-              id: 'p_' + Date.now(),
-              name,
-              html: models.html.getValue(),
-              css: models.css.getValue(),
-              js: models.js.getValue(),
-              updated: nowISO()
-            };
-            projects.unshift(newProj);
-            saveProjects(projects);
-            currentLoadedProjectId = newProj.id;
-            renderProjects();
-            alert('Draft saved as project: ' + name);
-          } else {
-            updateLoadedProjectContent();
-            alert('Project updated.');
-          }
-        } else {
-          // no loaded project -> Save As
-          saveAsBtn.click();
-        }
+            const name = (projectNameInput.value||'').trim(); if(!name){ alert('Enter a project name to save draft as a project.'); projectNameInput.focus(); return; }
+            const projects = loadProjects().filter(p=>p.id!=='draft'); const newProj = { id:'p_'+Date.now(), name, html:models.html.getValue(), css:models.css.getValue(), js:models.js.getValue(), updated:nowISO() };
+            projects.unshift(newProj); saveProjects(projects); currentLoadedProjectId=newProj.id; renderProjects(); alert('Draft saved as project: '+name);
+          } else { updateLoadedProjectContent(); alert('Project updated.'); }
+        } else { saveAsBtn.click(); }
       });
 
-      newProjectBtn.addEventListener('click', ()=>{
-        const confirmNew = confirm('Create a fresh new project? Unsaved changes will be kept as draft.');
-        if(!confirmNew) return;
-        // reset models to blank
-        models.html.setValue('<!-- New Project HTML -->\n');
-        models.css.setValue('/* New Project CSS */\n');
-        models.js.setValue('// New Project JS\n');
-        currentLoadedProjectId = null;
-        projectNameInput.value = '';
-        updatePreview();
-      });
+      newProjectBtn.addEventListener('click', ()=>{ if(!confirm('Create a fresh new project? Unsaved changes will be kept as draft.')) return; models.html.setValue('<!-- New Project HTML -->\n'); models.css.setValue('/* New Project CSS */\n'); models.js.setValue('// New Project JS\n'); currentLoadedProjectId=null; projectNameInput.value=''; updatePreview(); });
 
-      // Import sample
-      importSampleBtn.addEventListener('click', ()=>{
-        models.html.setValue(SAMPLE.html);
-        models.css.setValue(SAMPLE.css);
-        models.js.setValue(SAMPLE.js);
-        projectNameInput.value = SAMPLE.name;
-        currentLoadedProjectId = null;
-        updatePreview();
-      });
+      importSampleBtn.addEventListener('click', ()=>{ models.html.setValue(SAMPLE.html); models.css.setValue(SAMPLE.css); models.js.setValue(SAMPLE.js); projectNameInput.value=SAMPLE.name; currentLoadedProjectId=null; updatePreview(); });
 
-      // Clear drafts (remove any project with id 'draft')
-      clearDraftsBtn.addEventListener('click', ()=>{
-        const projects = loadProjects().filter(p => p.id !== 'draft');
-        saveProjects(projects);
-        renderProjects();
-      });
+      clearDraftsBtn.addEventListener('click', ()=>{ const projects = loadProjects().filter(p=>p.id!=='draft'); saveProjects(projects); renderProjects(); });
 
-      // Projects UI render
       function renderProjects(){
-        const projects = loadProjects();
-        projListEl.innerHTML = '';
-        if(projects.length === 0){
-          projListEl.innerHTML = '<div class="muted">No projects yet. Use "Save As" to create one.</div>';
-          return;
-        }
-        projects.forEach(p => {
-          const item = document.createElement('div');
-          item.className = 'proj-item';
-          const left = document.createElement('div');
-          left.style.display = 'flex';
-          left.style.flexDirection = 'column';
-          const title = document.createElement('strong');
-          title.textContent = p.name + (p.id === 'draft' ? ' (Draft)' : '');
-          const meta = document.createElement('span');
-          meta.className = 'meta muted';
-          meta.textContent = 'Updated: ' + new Date(p.updated).toLocaleString();
-          left.appendChild(title);
-          left.appendChild(meta);
-
-          const actions = document.createElement('div');
-          actions.className = 'proj-actions';
-          const loadBtn = document.createElement('button');
-          loadBtn.className = 'icon-btn';
-          loadBtn.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
-          loadBtn.title = 'Load project';
-          loadBtn.addEventListener('click', ()=> loadProject(p.id));
-
-          const updateBtn = document.createElement('button');
-          updateBtn.className = 'icon-btn';
-          updateBtn.innerHTML = '<i class="fa-solid fa-upload"></i>';
-          updateBtn.title = 'Update this project with current editor content';
-          updateBtn.addEventListener('click', ()=> {
-            if(confirm('Replace project "'+p.name+'" content with current editor content?')){
-              p.html = models.html.getValue();
-              p.css = models.css.getValue();
-              p.js = models.js.getValue();
-              p.updated = nowISO();
-              const arr = loadProjects().map(x => x.id === p.id ? p : x);
-              saveProjects(arr);
-              renderProjects();
-              alert('Project updated.');
-            }
-          });
-
-          const delBtn = document.createElement('button');
-          delBtn.className = 'icon-btn';
-          delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-          delBtn.title = 'Delete project';
-          delBtn.addEventListener('click', ()=>{
-            if(confirm('Delete "'+p.name+'" permanently?')) {
-              const arr = loadProjects().filter(x => x.id !== p.id);
-              saveProjects(arr);
-              if(currentLoadedProjectId === p.id) currentLoadedProjectId = null;
-              renderProjects();
-            }
-          });
-
-          actions.appendChild(loadBtn);
-          actions.appendChild(updateBtn);
-          actions.appendChild(delBtn);
-
-          item.appendChild(left);
-          item.appendChild(actions);
-          projListEl.appendChild(item);
+        const projects = loadProjects(); projListEl.innerHTML=''; if(projects.length===0){ projListEl.innerHTML='<div class="muted">No projects yet. Use "Save As" to create one.</div>'; return; }
+        projects.forEach(p=>{
+          const item=document.createElement('div'); item.className='proj-item';
+          const left=document.createElement('div'); left.style.display='flex'; left.style.flexDirection='column';
+          const title=document.createElement('strong'); title.textContent = p.name + (p.id==='draft'?' (Draft)':'');
+          const meta=document.createElement('span'); meta.className='meta muted'; meta.textContent = 'Updated: ' + new Date(p.updated).toLocaleString();
+          left.appendChild(title); left.appendChild(meta);
+          const actions=document.createElement('div'); actions.className='proj-actions';
+          const loadBtn=document.createElement('button'); loadBtn.className='icon-btn'; loadBtn.innerHTML='<i class="fa-solid fa-folder-open"></i>'; loadBtn.title='Load project'; loadBtn.addEventListener('click', ()=> loadProject(p.id));
+          const updateBtn=document.createElement('button'); updateBtn.className='icon-btn'; updateBtn.innerHTML='<i class="fa-solid fa-upload"></i>'; updateBtn.title='Update project'; updateBtn.addEventListener('click', ()=>{ if(confirm('Replace project "'+p.name+'" content with current editor content?')){ p.html=models.html.getValue(); p.css=models.css.getValue(); p.js=models.js.getValue(); p.updated=nowISO(); const arr = loadProjects().map(x => x.id===p.id ? p : x); saveProjects(arr); renderProjects(); alert('Project updated.'); }});
+          const delBtn=document.createElement('button'); delBtn.className='icon-btn'; delBtn.innerHTML='<i class="fa-solid fa-trash"></i>'; delBtn.title='Delete'; delBtn.addEventListener('click', ()=>{ if(confirm('Delete "'+p.name+'" permanently?')){ const arr = loadProjects().filter(x => x.id!==p.id); saveProjects(arr); if(currentLoadedProjectId===p.id) currentLoadedProjectId=null; renderProjects(); }});
+          actions.appendChild(loadBtn); actions.appendChild(updateBtn); actions.appendChild(delBtn);
+          item.appendChild(left); item.appendChild(actions); projListEl.appendChild(item);
         });
       }
 
       function loadProject(id){
-        const projects = loadProjects();
-        const p = projects.find(x => x.id === id);
-        if(!p) return alert('Project not found');
-        models.html.setValue(p.html || '');
-        models.css.setValue(p.css || '');
-        models.js.setValue(p.js || '');
-        projectNameInput.value = p.name || '';
-        currentLoadedProjectId = p.id;
-        updatePreview();
-        alert('Loaded project: ' + p.name);
+        const projects=loadProjects(); const p=projects.find(x=>x.id===id); if(!p) return alert('Project not found');
+        models.html.setValue(p.html||''); models.css.setValue(p.css||''); models.js.setValue(p.js||''); projectNameInput.value=p.name||''; currentLoadedProjectId=p.id; updatePreview(); alert('Loaded project: '+p.name);
       }
 
-  // render existing on load
-  renderProjects();
+      renderProjects();
 
-  // toggle side (use accessible toggle helper)
-  toggleSideBtn.addEventListener('click', ()=> setSideOpen(!sidePanel.classList.contains('open')));
-  closeSideBtn.addEventListener('click', ()=> setSideOpen(false));
+      toggleSideBtn.addEventListener('click', ()=> sidePanel.classList.toggle('open'));
+      closeSideBtn.addEventListener('click', ()=> sidePanel.classList.remove('open'));
 
-      // ---- Download logic (mandatory filename) ----
-      downloadBtn.addEventListener('click', ()=>{
-        // require filename in visible input; open modal if empty
-        const fname = (filenameInput.value || '').trim();
-        if(!fname){
-          lastActiveElement = document.activeElement;
-          modalBackdrop.classList.add('show');
-          modalFilename.value = '';
-          setTimeout(()=> modalFilename.focus(), 10);
-          return;
-        }
-        triggerDownload(fname);
-      });
+      // Download logic (mandatory filename)
+      function sanitizeFilename(name){ if(!name) return ''; return name.replace(/[\\\/\:\*\?"<>\|]+/g,'-').trim().slice(0,200); }
 
-      modalCancel.addEventListener('click', ()=>{
-        modalBackdrop.classList.remove('show');
-        try{ if(lastActiveElement) lastActiveElement.focus(); } catch(e){}
-      });
-      modalBackdrop.addEventListener('click', (e)=> { if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); try{ if(lastActiveElement) lastActiveElement.focus(); }catch(_){}} });
-
-      modalDownload.addEventListener('click', ()=>{
-        const raw = (modalFilename.value || '').trim();
-        const fname = sanitizeFilename(raw);
-        if(!fname){ alert('Enter a valid filename'); setTimeout(()=> modalFilename.focus(), 10); return; }
-        filenameInput.value = fname;
-        modalBackdrop.classList.remove('show');
-        triggerDownload(fname);
-        try{ if(lastActiveElement) lastActiveElement.focus(); } catch(e){}
-      });
+      downloadBtn.addEventListener('click', ()=>{ const fname=(filenameInput.value||'').trim(); if(!fname){ modalBackdrop.classList.add('show'); modalFilename.value=''; setTimeout(()=> modalFilename.focus(), 10); return; } triggerDownload(fname); });
+      modalCancel.addEventListener('click', ()=>{ modalBackdrop.classList.remove('show'); });
+      modalBackdrop.addEventListener('click', (e)=> { if(e.target===modalBackdrop) modalBackdrop.classList.remove('show'); });
+      modalDownload.addEventListener('click', ()=>{ const raw=(modalFilename.value||'').trim(); const fname=sanitizeFilename(raw); if(!fname){ alert('Enter a valid filename'); modalFilename.focus(); return; } filenameInput.value=fname; modalBackdrop.classList.remove('show'); triggerDownload(fname); });
 
       function triggerDownload(name){
-        const safe = sanitizeFilename(name || 'download');
-        if(!safe){ alert('Invalid filename'); return; }
-        const outName = safe.endsWith('.html') ? safe : (safe + '.html');
-        const content = getCombinedHTML();
-        const blob = new Blob([content], {type: 'text/html;charset=utf-8'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = outName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        const safe = sanitizeFilename(name||'download'); if(!safe){ alert('Invalid filename'); return; }
+        const out = safe.endsWith('.html')?safe:(safe+'.html'); const content = getCombinedHTML(); const blob = new Blob([content], {type:'text/html;charset=utf-8'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=out; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
       }
 
-      // Open in new tab (no filename required)
-      openNewTab.addEventListener('click', ()=>{
-        const w = window.open();
-        if(!w){ alert('Unable to open a new tab. It may be blocked by the browser.'); return; }
-        w.document.open();
-        w.document.write(getCombinedHTML());
-        w.document.close();
-      });
+      openNewTab.addEventListener('click', ()=>{ const w=window.open(); if(!w){ alert('Unable to open new tab (blocked)'); return; } w.document.open(); w.document.write(getCombinedHTML()); w.document.close(); });
 
-      // Run button
       runBtn.addEventListener('click', updatePreview);
+      window.addEventListener('keydown',(e)=>{ if((e.ctrlKey||e.metaKey)&& e.key.toLowerCase()==='s'){ e.preventDefault(); saveProjectBtn.click(); } });
 
-      // Keyboard: Ctrl/Cmd+S to save project (Save As flow if no loaded project)
-      window.addEventListener('keydown', (e)=>{
-        if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){
-          e.preventDefault();
-          saveProjectBtn.click();
-        }
-      });
+      autosaveStatus.textContent='on';
 
-      // initial autosave status
-      autosaveStatus.textContent = 'on';
-
-      // About page toggle behavior
+      // About toggle
       function showAbout(show){
-        const containerEl = document.querySelector('.container');
-        if(show){
-          // hide editor UI
-          try{ containerEl.style.display = 'none'; }catch(_){}
-          try{ sidePanel.classList.remove('open'); sidePanel.style.display = 'none'; }catch(_){}
-          aboutSectionEl.style.display = 'block';
-          aboutBtn.classList.add('active');
-          aboutBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Back';
-        } else {
-          aboutSectionEl.style.display = 'none';
-          try{ containerEl.style.display = ''; }catch(_){}
-          try{ sidePanel.style.display = ''; }catch(_){}
-          aboutBtn.classList.remove('active');
-          aboutBtn.innerHTML = '<i class="fa-solid fa-circle-info"></i> About';
-          // Re-layout Monaco after showing editor again
-          setTimeout(()=>{ try{ if(window.editor && typeof editor.layout === 'function') editor.layout(); }catch(_){ } }, 80);
-        }
+        const containerEl = document.querySelector('.container'); if(show){ containerEl.style.display='none'; sidePanel.classList.remove('open'); aboutSectionEl.style.display='block'; aboutBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Back'; } else { aboutSectionEl.style.display='none'; containerEl.style.display=''; aboutBtn.innerHTML = '<i class="fa-solid fa-circle-info"></i> About'; setTimeout(()=>{ try{ editor.layout(); }catch(_){ } },80); }
       }
+      if(aboutBtn) aboutBtn.addEventListener('click', ()=> showAbout(aboutSectionEl.style.display === 'none' ? true : false));
 
-      if(aboutBtn){
-        aboutBtn.addEventListener('click', ()=>{
-          const isShowing = aboutSectionEl && aboutSectionEl.style.display !== 'none';
-          showAbout(!isShowing);
-        });
-      }
-
-      // ---------- Built-in test runner (basic smoke tests) ----------
-      const runTestsBtn = document.getElementById('run-tests-btn');
-      function showTestResults(results){
-        // remove existing panel
-        const existing = document.getElementById('kriz-test-panel');
-        if(existing) existing.remove();
-        const panel = document.createElement('div');
-        panel.id = 'kriz-test-panel';
-        panel.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:200;background:var(--panel);border:1px solid rgba(255,255,255,0.06);padding:12px;border-radius:8px;max-width:440px;color:var(--muted);font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,0.6)';
-        const h = document.createElement('div');
-        h.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px';
-        const title = document.createElement('strong'); title.textContent = 'Test results';
-        const close = document.createElement('button'); close.className = 'icon-btn'; close.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-        close.addEventListener('click', ()=> panel.remove());
-        h.appendChild(title); h.appendChild(close);
-        panel.appendChild(h);
-        results.forEach(r => {
-          const row = document.createElement('div');
-          row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px';
-          const dot = document.createElement('div');
-          dot.style.width = '10px'; dot.style.height = '10px'; dot.style.borderRadius = '50%';
-          dot.style.background = r.pass ? 'var(--success)' : 'var(--danger)';
-          const txt = document.createElement('div');
-          txt.innerHTML = '<strong style="color:inherit">' + r.name + '</strong><div style="color:var(--muted);font-size:12px">' + (r.message || '') + '</div>';
-          row.appendChild(dot); row.appendChild(txt);
-          panel.appendChild(row);
-        });
-        document.body.appendChild(panel);
-      }
-
-      async function runTests(){
-        const results = [];
-        // Test 1: sanitizeFilename behaviour
-        try{
-          const a = sanitizeFilename('my*bad:file?.html');
-          const b = sanitizeFilename('  spaced name  ');
-          results.push({name:'sanitizeFilename', pass: a.indexOf('*')===-1 && b==='spaced name', message: 'outputs: ' + JSON.stringify([a,b])});
-        }catch(e){ results.push({name:'sanitizeFilename', pass:false, message:String(e)}); }
-
-        // Test 2: Monaco/editor presence
-        try{
-          const ok = !!(editor && models && models.html);
-          results.push({name:'Monaco load', pass: ok, message: ok ? 'editor ready' : 'editor missing'});
-        }catch(e){ results.push({name:'Monaco load', pass:false, message:String(e)}); }
-
-        // Test 3: Preview update
-        try{
-          const prev = models.html.getValue();
-          models.html.setValue('<div id="kriz_test_preview">HELLO_TEST</div>');
-          updatePreview();
-          const ok = (previewFrame.srcdoc || '').indexOf('HELLO_TEST') !== -1;
-          results.push({name:'Preview update', pass: ok, message: ok ? 'iframe updated' : 'iframe did not update'});
-          models.html.setValue(prev);
-          updatePreview();
-        }catch(e){ results.push({name:'Preview update', pass:false, message:String(e)}); }
-
-        // Test 4: localStorage save/load roundtrip (non-destructive)
-        try{
-          const before = loadProjects();
-          const temp = { id: 'kriz_test_temp_' + Date.now(), name: 'kriz tmp', html: 'x', css:'', js:'', updated: nowISO() };
-          const copy = before.slice();
-          copy.push(temp);
-          saveProjects(copy);
-          const after = loadProjects();
-          const found = after.some(p => p.id === temp.id);
-          // restore
-          saveProjects(before);
-          results.push({name:'Storage roundtrip', pass: !!found, message: found ? 'saved and restored' : 'temp not found'});
-        }catch(e){ results.push({name:'Storage roundtrip', pass:false, message:String(e)}); }
-
-        // Test 5: performAutoSave creates/updates draft
-        try{
-          const prevProjects = loadProjects();
-          const prevDraft = prevProjects.find(p => p.id === 'draft');
-          const oldHtml = models.html.getValue();
-          models.html.setValue('AUTO_SAVE_TEST_' + Date.now());
-          await (new Promise(res=> setTimeout(res, 50)));
-          performAutoSave();
-          const after = loadProjects();
-          const draft = after.find(p => p.id === 'draft');
-          const ok = draft && draft.html && draft.html.indexOf('AUTO_SAVE_TEST_') !== -1;
-          // restore previous projects
-          saveProjects(prevProjects);
-          models.html.setValue(oldHtml);
-          updatePreview();
-          results.push({name:'Auto-save', pass: !!ok, message: ok ? 'draft saved' : 'draft missing/unchanged'});
-        }catch(e){ results.push({name:'Auto-save', pass:false, message:String(e)}); }
-
-        showTestResults(results);
-      }
-
-      if(runTestsBtn){ runTestsBtn.addEventListener('click', ()=> runTests()); }
+      // tests hidden; kept for dev
     }); // end require
+    // -----------------------
+    // AI Integration (KrizVibe)
+    // -----------------------
+    // Basic AI config: user will change endpoint/key as needed in runtime (we include prompt).
+    // For demo / initial usage we'll use placeholder endpoint. If CORS blocks direct call, run a proxy.
+    const AI_CONFIG = {
+      endpoint: AI_ENDPOINT_DEFAULT,
+      model: AI_MODEL_DEFAULT,
+      temperature: AI_TEMP,
+      max_tokens: 1200,
+      reasoning_effort: 'medium',
+      stream: false
+    };
 
-    // ---- Utility: initial projects seed if empty? keep minimal ----
-    // ensure storage exists
-    if(!localStorage.getItem('krizcode_projects_v1')){
-      saveProjects([{
-        id: 'draft',
-        name: 'Draft (local)',
-        html: SAMPLE.html,
-        css: SAMPLE.css,
-        js: SAMPLE.js,
-        updated: nowISO()
-      }]);
+    // Strict system prompt (enforced)
+    const SYSTEM_PROMPT = `You are KrizCode Web-Builder AI.
+You MUST ALWAYS output code in EXACTLY the following 3 sections and nothing else:
+
+[HTML]
+<!-- HTML only, no CSS, no JS, no <style> or <script> tags -->
+
+[CSS]
+/* CSS only, no HTML, no JS */
+
+[JS]
+// JavaScript only, no HTML, no CSS
+
+STRICT RULES:
+- DO NOT include <style> or <script> tags anywhere.
+- DO NOT include CSS inside HTML.
+- DO NOT include JS inside HTML.
+- DO NOT duplicate CSS or JS.
+- DO NOT wrap code in backticks.
+- Output exactly the 3 sections in this exact order.
+- Assume every user prompt is a website creation task.
+`;
+
+    // Parser and cleaning (robust)
+    function cleanHTML(html){
+      return (html||'').replace(/<style[\\s\\S]*?<\\/style>/gi,'').replace(/<script[\\s\\S]*?<\\/script>/gi,'').replace(/<\\/?(?:html|head|body)[^>]*>/gi,'').trim();
+    }
+    function cleanCSS(css){ return (css||'').replace(/<\\/?style[^>]*>/gi,'').trim(); }
+    function cleanJS(js){ return (js||'').replace(/<\\/?script[^>]*>/gi,'').trim(); }
+
+    function parseSections(text){
+      if(!text) return {html:'', css:'', js:''};
+      const htmlMatch = text.match(/\\[HTML\\]([\\s\\S]*?)(?=\\[CSS\\]|\\[css\\]|\\[JS\\]|\\[js\\]|$)/i);
+      const cssMatch  = text.match(/\\[CSS\\]([\\s\\S]*?)(?=\\[JS\\]|\\[js\\]|$)/i);
+      const jsMatch   = text.match(/\\[JS\\]([\\s\\S]*)$/i);
+      const rawHtml = htmlMatch ? htmlMatch[1] : '';
+      const rawCss  = cssMatch  ? cssMatch[1]  : '';
+      const rawJs   = jsMatch   ? jsMatch[1]   : '';
+      return { html: cleanHTML(rawHtml), css: cleanCSS(rawCss), js: cleanJS(rawJs) };
     }
 
-  // NOTE: saveProjects is declared earlier inside this IIFE. The duplicate, broken
-  // declaration below caused a SyntaxError (missing parenthesis) and would
-  // override the correct function. Removed duplicate to keep the earlier
-  // implementation (which is used throughout the script).
-    // Wait a tick and render projects (monaco will render them too once ready)
-    setTimeout(()=> {
-      const evt = new Event('kriz_render_projects');
-      window.dispatchEvent(evt);
-    }, 300);
+    // AI UI state
+    let aiOpen = false;
+    let aiAutoInsert = true; // default ON
+    const aiTranscript = []; // simple in-memory history
 
-    // Listen for custom event to re-render projects after monaco init (we also used inline render earlier)
-    window.addEventListener('kriz_render_projects', ()=>{
-      // If monaco not ready then nothing; rendering handled inside monaco init earlier.
-      // This event exists so the file can trigger any external plugin hooks if needed.
+    function addAiMessage(text, who='assistant'){
+      const el = document.createElement('div'); el.className = 'ai-msg ' + (who==='user' ? 'user' : 'assistant'); el.innerText = text;
+      aiMessagesEl.appendChild(el); aiMessagesEl.scrollTop = aiMessagesEl.scrollHeight;
+    }
+
+    // open/close handlers
+    aiOpenBtn.addEventListener('click', ()=> setAiOpen(true));
+    aiCloseBtn.addEventListener('click', ()=> setAiOpen(false));
+    function setAiOpen(val){
+      aiOpen = !!val; aiPanel.classList.toggle('open', aiOpen);
+      aiPanel.setAttribute('aria-hidden', String(!aiOpen));
+      if(aiOpen) setTimeout(()=> aiInputEl.focus(), 60);
+    }
+
+    aiSettingsBtn.addEventListener('click', ()=> {
+      aiAutoInsert = !aiAutoInsert;
+      aiAutoInsertEl.textContent = aiAutoInsert ? 'ON' : 'OFF';
+      aiSettingsBtn.classList.toggle('active', aiAutoInsert);
     });
+
+    aiInsertManualBtn.addEventListener('click', ()=> {
+      // manual insertion of last parsed result (if any)
+      const last = aiTranscript.slice().reverse().find(x => x.type === 'assistant' && x.parsed);
+      if(!last) return alert('No parsed assistant response available to insert.');
+      insertParsedIntoEditor(last.parsed.html, last.parsed.css, last.parsed.js);
+      alert('Inserted code into editor.');
+    });
+
+    // send to AI
+    aiSendBtn.addEventListener('click', () => sendAiPrompt());
+    aiInputEl.addEventListener('keydown', (e) => { if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendAiPrompt(); } });
+
+    async function sendAiPrompt(){
+      const userText = (aiInputEl.value || '').trim();
+      if(!userText){ aiInputEl.focus(); return; }
+      addAiMessage(userText, 'user');
+      aiTranscript.push({type:'user', text:userText, time: nowISO()});
+      aiInputEl.value = '';
+
+      // Build payload
+      const payload = {
+        model: AI_CONFIG.model,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userText }
+        ],
+        temperature: AI_CONFIG.temperature,
+        max_tokens: AI_CONFIG.max_tokens,
+        reasoning_effort: AI_CONFIG.reasoning_effort,
+        stream: false
+      };
+
+      // Let user optionally change endpoint/key via prompt - but keep default for now
+      const endpoint = AI_CONFIG.endpoint;
+      const headers = { 'Content-Type': 'application/json' };
+      // If you want to include Authorization header by default, modify here.
+      // Example: headers['Authorization'] = 'Bearer YOUR_KEY_HERE';
+
+      // Show loading message
+      const loadingEl = document.createElement('div'); loadingEl.className='ai-msg'; loadingEl.innerText = 'KrizVibe is thinking...'; aiMessagesEl.appendChild(loadingEl); aiMessagesEl.scrollTop = aiMessagesEl.scrollHeight;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload)
+        });
+
+        const text = await res.text();
+        // remove loadingEl
+        loadingEl.remove();
+
+        // try parse JSON
+        let assistantText = '';
+        try {
+          const json = JSON.parse(text);
+          assistantText = json?.choices?.[0]?.message?.content ?? json?.message?.content ?? (json?.result && typeof json.result === 'string' ? json.result : JSON.stringify(json));
+        } catch(e) {
+          assistantText = text;
+        }
+
+        // Clean and parse sections
+        const parsed = parseSections(assistantText);
+        // If parsed is empty, show full assistantText
+        if((parsed.html||parsed.css||parsed.js) && ((parsed.html.trim())|| (parsed.css.trim()) || (parsed.js.trim()))){
+          // show a short assistant message (we'll also show details button)
+          addAiMessage('Generated code (parsed and inserted' + (aiAutoInsert ? '' : ' - auto-insert disabled') + ').', 'assistant');
+          // store transcript with parsed
+          aiTranscript.push({type:'assistant', text:assistantText, parsed, time: nowISO()});
+          // Optionally auto-insert
+          if(aiAutoInsert){ insertParsedIntoEditor(parsed.html, parsed.css, parsed.js); }
+        } else {
+          // not parsed -> show full assistant content and do not insert
+          addAiMessage(assistantText, 'assistant');
+          aiTranscript.push({type:'assistant', text:assistantText, parsed: null, time: nowISO()});
+        }
+      } catch(err){
+        loadingEl.remove();
+        addAiMessage('Error contacting AI: ' + (err.message || err), 'assistant');
+        console.error(err);
+      }
+    }
+
+    // Insert parsed into editor models safely
+    function insertParsedIntoEditor(html, css, js){
+      try{
+        // Keep caret in active model if possible — we replace full content (common for generator)
+        models.html.setValue(html || '');
+        models.css.setValue(css || '');
+        models.js.setValue(js || '');
+        // set loaded project as draft (auto)
+        currentLoadedProjectId = null;
+        projectNameInput.value = '';
+        // push editorial change into autosave
+        performAutoSave();
+        // update preview
+        try{ if(previewFrame) previewFrame.srcdoc = `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><style>${css||''}</style></head><body>${html||''}<script>${js||''}<\/script></body></html>`; }catch(_){ updatePreview(); }
+      }catch(e){ console.error('insertParsedIntoEditor error', e); alert('Failed to insert code into editor.'); }
+    }
+
+    // -----------------------
+    // Initial seed projects & misc
+    // -----------------------
+    if(!localStorage.getItem(STORAGE_KEY)){
+      saveProjects([{ id:'draft', name:'Draft (local)', html:SAMPLE.html, css:SAMPLE.css, js:SAMPLE.js, updated:nowISO() }]);
+    }
+
+    // Expose small config console on window for debugging if needed
+    window.KrizCode = {
+      insertParsedIntoEditor, parseSections, SYSTEM_PROMPT, AI_CONFIG
+    };
 
   })();
   </script>
