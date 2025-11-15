@@ -1,166 +1,195 @@
-# ⚡ KrizCode — Advanced Web Code Editor  
-### A powerful, VS Code–style HTML/CSS/JS editor with live preview & project manager.
 
-![KrizCode Screenshot 1](https://github.com/altkriz/htmleditor/blob/main/img/image1.png)
+# ⚡ KrizVibe Editor — The Future of Vibe Coding with AI
 
-KrizCode has evolved into a **full-featured, professional, browser-based development environment** powered by **Monaco Editor** (the same editor used in VS Code).  
-This is not just an HTML editor anymore — it’s a complete **mini workspace** for creating, saving, loading, and managing web projects directly in your browser.
+KrizVibe Editor is a next-generation **web-based coding environment** built for creators, learners, and developers who want to build websites visually, interactively, and intelligently.
 
----
+Powered by **KrizVibe AI** — our integrated AI website-generation assistant — the editor merges traditional hand-coding with AI-assisted “vibe coding”, enabling complete websites to be generated instantly and injected directly into HTML, CSS, and JavaScript editors.
 
-# 🚀 Features (Completely Revamped)
-
-### 🧠 **Monaco Editor Integration**  
-- Full VS Code editing experience  
-- Syntax highlighting for HTML, CSS, JS  
-- IntelliSense-ready structure  
-- Tabs switch between language models without losing undo history  
-
-### 🧩 **Tabbed Editor (HTML / CSS / JS)**  
-- Three Monaco models  
-- Fast switching  
-- Better organization and workflow  
-
-### 🔍 **Live Preview (Real-Time)**  
-- Updates automatically as you type  
-- Or run manually  
-- Preview opens in a new tab too  
-
-### 💾 **LocalStorage Project Manager (Side Panel)**  
-- Save unlimited projects  
-- Load/edit/delete any project  
-- Auto-save draft every 3 seconds  
-- Keeps work even after browser restart  
-- Project timestamps displayed  
-
-![KrizCode Screenshot 2](https://github.com/altkriz/htmleditor/blob/main/img/image2.png)
-
-### 📥 **Mandatory Filename for Downloads**  
-- Download requires a filename  
-- Clean “Enter filename” modal  
-- Exports as `filename.html`  
-
-### 📂 **New Project + Save + Save As**  
-- Create clean projects anytime  
-- Overwrite existing projects  
-- Convert drafts into projects  
-
-### 🎨 **Modern UI / UX**  
-- VS Code dark theme  
-- Smooth glassy side panel  
-- Clean buttons & icons  
-- Fully responsive layout  
-- Editor : Preview = 1 : 2 ratio  
-
-### 📱 **Mobile Ready**  
-- Stacks layout on smaller screens  
-- Monaco auto-resizes  
-- Perfect for on-the-go coding  
+KrizVibe Editor is **free**, **open-source**, and uses the **Pollinations OpenAI-compatible API** — no API key, no credit card, no rate limits.
 
 ---
 
-# 🖼️ Screenshots
+## 🌟 Key Features
 
-### Editor + Preview Layout  
-![KrizCode Screenshot 3](https://github.com/altkriz/htmleditor/blob/main/img/image3.png)
+### 🧠 KrizVibe AI (Star Feature)
 
-### Projects Side Panel  
-![KrizCode Screenshot 4](https://github.com/altkriz/htmleditor/blob/main/img/image4.png)
+KrizVibe AI is the highlight of the entire editor. It is a fully integrated, automatic AI assistant built for modern web creation.
 
----
+- Generates complete websites from simple English prompts  
+- Always returns perfectly structured `[HTML]`, `[CSS]`, `[JS]` blocks  
+- Automatically injects code into Monaco Editor  
+- Smooth docked AI panel with expandable animation  
+- Uses **Pollinations AI** — completely free and open  
+- Encourages creativity, rapid prototyping, and futuristic vibe coding  
 
-# 🛠️ Technologies
-
-- **Monaco Editor** (VS Code engine)
-- **HTML5** (App structure)
-- **CSS3** (Custom dark UI + responsive layout)
-- **JavaScript (ES6+)**  
-  - Monaco initialization  
-  - LocalStorage project system  
-  - Auto-save system  
-  - Live preview engine  
-  - Modal system  
-  - Tab switching  
-- **Font Awesome** (Icons)
+📸 Screenshot (KrizVibe AI Panel)
+![KrizVibe AI](https://github.com/altkriz/htmleditor/blob/main/img/image2.png)
 
 ---
 
-# 📚 How to Use
+### 📝 Triple Monaco Editor (HTML | CSS | JS)
 
-1. **Write your code**  
-   - Switch between HTML / CSS / JS tabs  
-   - Monaco gives you VS Code-like editing  
+KrizVibe Editor uses the **same engine as VS Code** — Monaco Editor — delivering a professional coding experience directly in your browser.
 
-2. **Preview**  
-   - Instant live preview updates while typing  
-   - Or press **Run**  
+- Syntax highlighting  
+- IntelliSense-enabled  
+- Three separate tabs  
+- Instant live preview  
 
-3. **Save your work**  
-   - Open **Projects** panel  
-   - Use **Save As** with project name  
-   - Auto-save keeps a “Draft” always  
-
-4. **Reload projects**  
-   - Click any saved project  
-   - It loads instantly into all three editors  
-
-5. **Download your page**  
-   - Enter a filename  
-   - Download as a fully rendered `.html`  
-
-6. **Open in new tab**  
-   - Perfect for testing or sharing  
+📸 Screenshot (Light Theme)
+![Editor Light Theme](https://github.com/altkriz/htmleditor/blob/main/img/image1.png)
 
 ---
 
-# ⚡ Installation
+### 💾 Local Project Saving (Secure and Private)
 
-No installation required.
+All save features in KrizVibe Editor use **localStorage**, ensuring:
 
-Just open:
+- No servers  
+- No cloud  
+- Zero tracking  
+- Maximum privacy  
 
-index.html 
+Users can:
 
+- Save unlimited projects locally  
+- Auto-save drafts  
+- Load/update projects  
+- Import sample templates  
+- Delete saved sessions  
 
-Or serve it on GitHub Pages / any hosting.
-
----
-
-# 🤝 Contributing
-
-Contributions welcome!  
-Feel free to improve UI, add themes, or extend functionality.
-
-Steps:
-
-1. Fork repo  
-2. Create branch  
-3. Commit your changes  
-4. Push & send PR  
+📸 Screenshot (Dark Theme — Project Panel)
+![Local Save Panel](https://github.com/altkriz/htmleditor/blob/main/img/image4.png)
 
 ---
 
-# 📜 License  
-This project is licensed under the **MIT License**.
+### 🌗 Light & Dark Mode
+
+KrizVibe Editor features a sleek dual-theme interface with a toggle available in the navbar.
+
+📸 Screenshot (About Section — Dark Theme)
+![About Section Dark](https://github.com/altkriz/htmleditor/blob/main/img/image3.png)
 
 ---
 
-# 🌐 Connect With Me
+### 📌 Additional Features
 
-- **Twitter**: https://x.com/altkriz  
-- **Facebook**: https://www.facebook.com/altkriz
-- **Instagram**: https://www.instagram.com/altkriz
-- **GitHub**: https://github.com/altkriz  
-- **Website**: https://kriztech.in
-
----
-
-# 🙏 Acknowledgments  
-- **Monaco Editor Team**  
-- **Font Awesome**  
-- Open-source community for continuous inspiration  
+- Real-time live preview (auto updates)
+- Mandatory filename before download
+- Download code as `.html` file
+- Open preview in a new tab
+- Responsive layout (desktop priority, mobile supported)
+- Modern UI with glass effects
+- Social footer + about page
+- Sidepanel for project management
+- 100% offline capable
 
 ---
 
-# ✨ Happy Coding with KrizCode!  
-A truly modern, fast, and developer-friendly web editor ✨
+## 🤖 KrizVibe AI — How It Works
+
+KrizVibe AI uses the Pollinations OpenAI-Compatible endpoint to generate structured web code.
+
+### Example API Request:
+```json
+{
+  "model": "openai",
+  "temperature": 1.0,
+  "max_tokens": 1500,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are KrizVibe AI, a professional website-generation assistant. Always output exactly three sections using [HTML], [CSS], [JS] — no explanations."
+    },
+    {
+      "role": "user",
+      "content": "Create a landing page with a hero, features, and footer."
+    }
+  ]
+}
+````
+
+### Expected Response Format:
+
+```
+[HTML]
+<!-- html code here -->
+
+[CSS]
+/* css code here */
+
+[JS]
+// javascript here
+```
+
+KrizVibe Editor automatically extracts these 3 sections and inserts them directly into the Monaco editor.
+
+---
+
+## 🚀 Why KrizVibe Editor?
+
+Because coding should feel fun, creative, and frictionless.
+
+KrizVibe Editor merges:
+
+* the **power of AI**,
+* the **precision of real code**,
+* the **beauty of a modern UI**,
+* the **freedom of an offline tool**,
+
+into one seamless vibe-driven workflow.
+
+Whether you're learning or rapidly prototyping, KrizVibe AI transforms your ideas into real interfaces instantly.
+
+---
+
+## 🛠️ Installation
+
+No installation required — simply open `index.html` in any modern browser.
+
+To host online, upload the files to:
+
+* GitHub Pages
+* Netlify
+* Vercel
+* Your own server
+
+Everything is static. No backend required.
+
+---
+
+## 💚 Powered By
+
+* Monaco Editor
+* Pollinations AI
+* HTML, CSS & Vanilla JS
+* FontAwesome Icons
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome!
+If you want to improve vibe coding or the KrizVibe AI workflow, open an issue or PR.
+
+---
+
+## 📜 License
+
+MIT License — free to use, modify, and evolve.
+
+---
+
+## 🌐 Connect
+
+* Twitter/X: [https://x.com/altkriz](https://x.com/altkriz)
+* Instagram: [https://instagram.com/k.raza193](https://instagram.com/altkriz)
+* GitHub: [https://github.com/altkriz](https://github.com/altkriz)
+* Website: [https://altkriz.github.io/](https://altkriz.github.io/)
+
+---
+
+🎉 **Enjoy the future of Vibe Coding with KrizVibe Editor.**
+
+```
+
