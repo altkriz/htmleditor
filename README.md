@@ -183,7 +183,7 @@ MIT License — free to use, modify, and evolve.
 ## 🌐 Connect
 
 * Twitter/X: [https://x.com/altkriz](https://x.com/altkriz)
-* Instagram: [https://instagram.com/k.raza193](https://instagram.com/altkriz)
+* Instagram: [https://instagram.com/altkriz](https://instagram.com/altkriz)
 * GitHub: [https://github.com/altkriz](https://github.com/altkriz)
 * Website: [https://altkriz.github.io/](https://altkriz.github.io/)
 
