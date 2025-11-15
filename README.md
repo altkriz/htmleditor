@@ -5,7 +5,7 @@ KrizVibe Editor is a next-generation **web-based coding environment** built for 
 
 Powered by **KrizVibe AI** — our integrated AI website-generation assistant — the editor merges traditional hand-coding with AI-assisted “vibe coding”, enabling complete websites to be generated instantly and injected directly into HTML, CSS, and JavaScript editors.
 
-KrizVibe Editor is **free**, **open-source**, and uses the **Pollinations OpenAI-compatible API** — no API key, no credit card, no rate limits.
+KrizVibe Editor is **free**, **open-source**, and uses the **Pollinations OpenAI-compatible API** — no API key, no credit card, no rate limits..
 
 ---
 
