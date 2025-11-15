@@ -1,93 +1,166 @@
-# KrizCode HTML Editor
+# ⚡ KrizCode — Advanced Web Code Editor  
+### A powerful, VS Code–style HTML/CSS/JS editor with live preview & project manager.
 
-![KrizCode Editor Screenshot](https://github.com/altkriz/htmleditor/blob/main/img/image.png)
-![KrizCode Editor About Section](https://github.com/altkriz/htmleditor/blob/main/img/image-1.png)
+![KrizCode Screenshot 1](https://github.com/altkriz/htmleditor/blob/main/img/image1.png)
 
-**KrizCode HTML Editor** is a lightweight, responsive, and user-friendly web-based code editor that allows you to write, preview, and download HTML, CSS, and JavaScript code in real-time. Whether you're a beginner learning web development or an experienced developer testing snippets, this editor is designed to make your coding experience seamless and enjoyable.
-
----
-
-## Features ✨
-
-- **Real-Time Preview**: Instantly see the output of your HTML, CSS, and JavaScript code.
-- **Three-Pane Editor**: Separate panels for HTML, CSS, and JavaScript for organized coding.
-- **Download Code**: Export your code as a single HTML file with all styles and scripts included.
-- **Responsive Design**: Works flawlessly on both desktop and mobile devices.
-- **About Section**: Learn more about the project and its mission.
-- **Social Media Links**: Connect with the developer and stay updated.
-- **Clean UI**: Modern and intuitive interface with a dark theme.
+KrizCode has evolved into a **full-featured, professional, browser-based development environment** powered by **Monaco Editor** (the same editor used in VS Code).  
+This is not just an HTML editor anymore — it’s a complete **mini workspace** for creating, saving, loading, and managing web projects directly in your browser.
 
 ---
 
-## How to Use 🚀
+# 🚀 Features (Completely Revamped)
 
-1. **Write Code**: Use the three panels to write your HTML, CSS, and JavaScript code.
-2. **Preview**: The preview panel updates in real-time as you type.
-3. **Download**: Click the "Download Code" button to save your work as an HTML file.
-4. **Switch Sections**: Use the navigation bar to toggle between the Editor and About sections.
+### 🧠 **Monaco Editor Integration**  
+- Full VS Code editing experience  
+- Syntax highlighting for HTML, CSS, JS  
+- IntelliSense-ready structure  
+- Tabs switch between language models without losing undo history  
 
----
+### 🧩 **Tabbed Editor (HTML / CSS / JS)**  
+- Three Monaco models  
+- Fast switching  
+- Better organization and workflow  
 
-## Screenshots 📸
+### 🔍 **Live Preview (Real-Time)**  
+- Updates automatically as you type  
+- Or run manually  
+- Preview opens in a new tab too  
 
-### Editor View
-![Editor Screenshot](https://github.com/altkriz/htmleditor/blob/main/img/image.png)
+### 💾 **LocalStorage Project Manager (Side Panel)**  
+- Save unlimited projects  
+- Load/edit/delete any project  
+- Auto-save draft every 3 seconds  
+- Keeps work even after browser restart  
+- Project timestamps displayed  
 
-### About Section
-![About Section Screenshot](https://github.com/altkriz/htmleditor/blob/main/img/image-1.png)
+![KrizCode Screenshot 2](https://github.com/altkriz/htmleditor/blob/main/img/image2.png)
 
----
+### 📥 **Mandatory Filename for Downloads**  
+- Download requires a filename  
+- Clean “Enter filename” modal  
+- Exports as `filename.html`  
 
-## Technologies Used 💻
+### 📂 **New Project + Save + Save As**  
+- Create clean projects anytime  
+- Overwrite existing projects  
+- Convert drafts into projects  
 
-- **HTML5**: Structure of the application.
-- **CSS3**: Styling and responsive design.
-- **JavaScript**: Real-time preview and functionality.
-- **Font Awesome**: Icons for social media and UI elements.
+### 🎨 **Modern UI / UX**  
+- VS Code dark theme  
+- Smooth glassy side panel  
+- Clean buttons & icons  
+- Fully responsive layout  
+- Editor : Preview = 1 : 2 ratio  
 
----
-
-## Installation 🛠️
-
-No installation required! Simply open the `index.html` file in your browser, or visit the live demo (if hosted).
-
----
-
-## Contributing 🤝
-
-Contributions are welcome! If you'd like to improve this project, follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeatureName`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/YourFeatureName`).
-5. Open a pull request.
-
----
-
-## License 📜
-
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
-## Connect with Me 🌐
-
-Let's stay connected! Follow me on:
-
-- [Twitter](https://twitter.com/altkriz)
-- [Facebook](https://www.facebook.com/k.raza193)
-- [Instagram](https://www.instagram.com/k.raza193)
-- [GitHub](https://github.com/altkriz)
-- [Website](https://altkriz.github.io/)
+### 📱 **Mobile Ready**  
+- Stacks layout on smaller screens  
+- Monaco auto-resizes  
+- Perfect for on-the-go coding  
 
 ---
 
-## Acknowledgments 🙏
+# 🖼️ Screenshots
 
-- Thanks to [Font Awesome](https://fontawesome.com/) for the amazing icons.
-- Special thanks to the open-source community for inspiration and support.
+### Editor + Preview Layout  
+![KrizCode Screenshot 3](https://github.com/altkriz/htmleditor/blob/main/img/image3.png)
+
+### Projects Side Panel  
+![KrizCode Screenshot 4](https://github.com/altkriz/htmleditor/blob/main/img/image4.png)
 
 ---
 
-Happy Coding! 💻✨
+# 🛠️ Technologies
+
+- **Monaco Editor** (VS Code engine)
+- **HTML5** (App structure)
+- **CSS3** (Custom dark UI + responsive layout)
+- **JavaScript (ES6+)**  
+  - Monaco initialization  
+  - LocalStorage project system  
+  - Auto-save system  
+  - Live preview engine  
+  - Modal system  
+  - Tab switching  
+- **Font Awesome** (Icons)
+
+---
+
+# 📚 How to Use
+
+1. **Write your code**  
+   - Switch between HTML / CSS / JS tabs  
+   - Monaco gives you VS Code-like editing  
+
+2. **Preview**  
+   - Instant live preview updates while typing  
+   - Or press **Run**  
+
+3. **Save your work**  
+   - Open **Projects** panel  
+   - Use **Save As** with project name  
+   - Auto-save keeps a “Draft” always  
+
+4. **Reload projects**  
+   - Click any saved project  
+   - It loads instantly into all three editors  
+
+5. **Download your page**  
+   - Enter a filename  
+   - Download as a fully rendered `.html`  
+
+6. **Open in new tab**  
+   - Perfect for testing or sharing  
+
+---
+
+# ⚡ Installation
+
+No installation required.
+
+Just open:
+
+index.html 
+
+
+Or serve it on GitHub Pages / any hosting.
+
+---
+
+# 🤝 Contributing
+
+Contributions welcome!  
+Feel free to improve UI, add themes, or extend functionality.
+
+Steps:
+
+1. Fork repo  
+2. Create branch  
+3. Commit your changes  
+4. Push & send PR  
+
+---
+
+# 📜 License  
+This project is licensed under the **MIT License**.
+
+---
+
+# 🌐 Connect With Me
+
+- **Twitter**: https://x.com/altkriz  
+- **Facebook**: https://www.facebook.com/altkriz
+- **Instagram**: https://www.instagram.com/altkriz
+- **GitHub**: https://github.com/altkriz  
+- **Website**: https://kriztech.in
+
+---
+
+# 🙏 Acknowledgments  
+- **Monaco Editor Team**  
+- **Font Awesome**  
+- Open-source community for continuous inspiration  
+
+---
+
+# ✨ Happy Coding with KrizCode!  
+A truly modern, fast, and developer-friendly web editor ✨
