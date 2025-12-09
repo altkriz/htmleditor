@@ -384,6 +384,14 @@
     @media (max-width: 768px) {
       .split-view { flex-direction: column; }
       .editor-pane, .preview-pane { width: 100%; height: 50%; }
+      
+      /* Bug 34: Responsive sidebar width */
+      .side-panel {
+        width: 85%;
+        max-width: 300px;
+        left: -85%;
+      }
+      .side-panel.active { left: 0; }
     }
     
     ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -439,10 +447,10 @@
     <div class="split-view">
       <!-- Editor Column -->
       <div class="editor-pane">
-        <div class="tabs-container">
-          <div class="tab active" data-lang="html"><i class="fa-brands fa-html5" style="color:#e34c26"></i> HTML</div>
-          <div class="tab" data-lang="css"><i class="fa-brands fa-css3-alt" style="color:#264de4"></i> CSS</div>
-          <div class="tab" data-lang="js"><i class="fa-brands fa-js" style="color:#f7df1e"></i> JS</div>
+        <div class="tabs-container" role="tablist" aria-label="Code editor tabs">
+          <div class="tab active" data-lang="html" role="tab" aria-selected="true" aria-controls="monaco-host" tabindex="0"><i class="fa-brands fa-html5" style="color:#e34c26"></i> HTML</div>
+          <div class="tab" data-lang="css" role="tab" aria-selected="false" aria-controls="monaco-host" tabindex="-1"><i class="fa-brands fa-css3-alt" style="color:#264de4"></i> CSS</div>
+          <div class="tab" data-lang="js" role="tab" aria-selected="false" aria-controls="monaco-host" tabindex="-1"><i class="fa-brands fa-js" style="color:#f7df1e"></i> JS</div>
           
           <div class="editor-actions">
             <div class="status-dot" id="autosave-dot" title="Autosave Status"></div>
@@ -491,9 +499,9 @@
   </div>
 
   <!-- About Modal -->
-  <div class="modal-overlay" id="about-modal">
+  <div class="modal-overlay" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-box">
-      <h2 style="margin-top:0; color:var(--accent)">About KrizVibe</h2>
+      <h2 id="modal-title" style="margin-top:0; color:var(--accent)">About KrizVibe</h2>
       <p style="color:var(--text-muted); line-height:1.6">
         Experience the vibe of coding with KrizVibe, a real-time HTML, CSS, and JavaScript editor powered by AI.
       </p>
@@ -517,6 +525,7 @@
     const PROJECT_KEY = 'krizvibe_projects_v2';
     const AUTOSAVE_KEY = 'krizvibe_autosave_draft';
     const LAST_PROJECT_KEY = 'krizvibe_last_project';
+    const AI_CONSENT_KEY = 'krizvibe_ai_consent';
     let currentProjectId = null;
     let autosaveTimer;
     let autosaveDraftTimer;
@@ -538,7 +547,14 @@
       if (btn) btn.disabled = true;
     });
     
+    // Bug 30: Add error handling for Monaco loader
+    window.monacoLoadTimeout = setTimeout(() => {
+      alert('Failed to load Monaco Editor. Please check your internet connection and refresh the page.');
+    }, 15000);
+    
     require(['vs/editor/editor.main'], function() {
+      clearTimeout(window.monacoLoadTimeout);
+      
       htmlModel = monaco.editor.createModel(DEFAULT_CODE.html, 'html');
       cssModel = monaco.editor.createModel(DEFAULT_CODE.css, 'css');
       jsModel = monaco.editor.createModel(DEFAULT_CODE.js, 'javascript');
@@ -592,22 +608,52 @@
         const btn = document.getElementById(id);
         if (btn) btn.disabled = false;
       });
+    }, function(err) {
+      // Bug 30: Handle Monaco load error
+      clearTimeout(window.monacoLoadTimeout);
+      console.error('Monaco failed to load:', err);
+      alert('Failed to load Monaco Editor: ' + err.message + '\nPlease refresh the page.');
     });
 
     // --- Tab Logic ---
     document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        activeLang = tab.dataset.lang;
+      tab.addEventListener('click', () => switchTab(tab));
+      
+      // Bug 35: Keyboard navigation for tabs
+      tab.addEventListener('keydown', (e) => {
+        const tabs = Array.from(document.querySelectorAll('.tab'));
+        const currentIndex = tabs.indexOf(tab);
         
-        if(activeLang === 'html') editor.setModel(htmlModel);
-        if(activeLang === 'css') editor.setModel(cssModel);
-        if(activeLang === 'js') editor.setModel(jsModel);
-        
-        editor.focus();
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          switchTab(tab);
+        } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+          e.preventDefault();
+          tabs[currentIndex - 1].focus();
+        } else if (e.key === 'ArrowRight' && currentIndex < tabs.length - 1) {
+          e.preventDefault();
+          tabs[currentIndex + 1].focus();
+        }
       });
     });
+    
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
+      activeLang = tab.dataset.lang;
+      
+      if(activeLang === 'html') editor.setModel(htmlModel);
+      if(activeLang === 'css') editor.setModel(cssModel);
+      if(activeLang === 'js') editor.setModel(jsModel);
+      
+      editor.focus();
+    }
 
     // --- Preview Logic ---
     function getCombinedCode() {
@@ -721,17 +767,43 @@
       const text = aiInput.value.trim();
       if(!text) return;
 
+      // Bug 10: Check for AI consent
+      try {
+        const consent = localStorage.getItem(AI_CONSENT_KEY);
+        if (consent !== 'true') {
+          const userConsent = confirm(
+            'AI Code Sharing Notice:\n\n' +
+            'Using the AI assistant will send your current HTML, CSS, and JavaScript code along with your prompt to the Pollinations AI service (a third-party API).\n\n' +
+            'Your code will be transmitted over the internet to generate AI responses. Do not use this feature with sensitive or private code.\n\n' +
+            'Do you consent to sharing your code with the AI service?'
+          );
+          
+          if (!userConsent) {
+            return;
+          }
+          
+          localStorage.setItem(AI_CONSENT_KEY, 'true');
+        }
+      } catch (err) {
+        console.error('Failed to check AI consent:', err);
+      }
+
       addChatMsg('user', text);
       aiInput.value = '';
       aiInput.disabled = true;
       
       const spinnerMsg = addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating code...');
 
+      const currentCode = `HTML: ${htmlModel.getValue()}\nCSS: ${cssModel.getValue()}\nJS: ${jsModel.getValue()}`;
+      
+      // Bug 49: Warn if context is too large
+      if (currentCode.length > 10000) {
+        console.warn('Large code context may exceed AI model limits:', currentCode.length, 'characters');
+      }
+
       const systemPrompt = `You are KrizVibe AI, an expert web developer.
       Current Code Context:
-      HTML: ${htmlModel.getValue()}
-      CSS: ${cssModel.getValue()}
-      JS: ${jsModel.getValue()}
+      ${currentCode}
       
       User Request: ${text}
       
@@ -834,9 +906,24 @@
     const sidePanel = document.getElementById('side-panel');
     const projectsList = document.getElementById('projects-list');
     const filenameInput = document.getElementById('filename-input');
+    const closeSideBtn = document.getElementById('close-side');
+    let lastFocusedBeforeSidebar = null;
 
-    document.getElementById('btn-projects').addEventListener('click', () => sidePanel.classList.add('active'));
-    document.getElementById('close-side').addEventListener('click', () => sidePanel.classList.remove('active'));
+    document.getElementById('btn-projects').addEventListener('click', () => {
+      // Bug 39: Save last focused element
+      lastFocusedBeforeSidebar = document.activeElement;
+      sidePanel.classList.add('active');
+      // Move focus to close button
+      closeSideBtn.focus();
+    });
+    
+    closeSideBtn.addEventListener('click', () => {
+      sidePanel.classList.remove('active');
+      // Bug 39: Restore focus
+      if (lastFocusedBeforeSidebar) {
+        lastFocusedBeforeSidebar.focus();
+      }
+    });
 
     function getProjects() {
       // Bug 14, Bug 15: Wrap localStorage access and JSON.parse in try/catch
@@ -904,6 +991,9 @@
         // Build DOM nodes to prevent XSS (Bug 2, Bug 17)
         const card = document.createElement('div');
         card.className = 'project-card';
+        card.setAttribute('tabindex', '0'); // Bug 42: Make keyboard focusable
+        card.setAttribute('role', 'button'); // Bug 42: Add role
+        card.setAttribute('aria-label', 'Project: ' + p.name);
         
         const nameDiv = document.createElement('div');
         nameDiv.style.cssText = 'font-weight:600; font-size:13px;';
@@ -922,7 +1012,10 @@
         loadBtn.setAttribute('data-project-id', p.id);
         loadBtn.setAttribute('aria-label', 'Load project ' + p.name);
         loadBtn.innerHTML = '<i class="fa-solid fa-folder-open"></i>';
-        loadBtn.addEventListener('click', () => loadProject(p.id));
+        loadBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          loadProject(p.id);
+        });
         
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'icon-btn';
@@ -930,7 +1023,10 @@
         deleteBtn.setAttribute('data-project-id', p.id);
         deleteBtn.setAttribute('aria-label', 'Delete project ' + p.name);
         deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-        deleteBtn.addEventListener('click', () => deleteProject(p.id));
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteProject(p.id);
+        });
         
         actionsDiv.appendChild(loadBtn);
         actionsDiv.appendChild(deleteBtn);
@@ -938,6 +1034,15 @@
         card.appendChild(nameDiv);
         card.appendChild(metaDiv);
         card.appendChild(actionsDiv);
+        
+        // Bug 42: Add keyboard support for card
+        card.addEventListener('click', () => loadProject(p.id));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            loadProject(p.id);
+          }
+        });
         
         projectsList.appendChild(card);
       });
@@ -1031,10 +1136,58 @@
     });
 
     const aboutModal = document.getElementById('about-modal');
-    document.getElementById('btn-about').addEventListener('click', () => aboutModal.classList.add('active'));
-    document.getElementById('close-about').addEventListener('click', () => aboutModal.classList.remove('active'));
+    const closeAboutBtn = document.getElementById('close-about');
+    let lastFocusedElement = null;
+    
+    document.getElementById('btn-about').addEventListener('click', () => {
+      // Bug 38: Save last focused element and trap focus
+      lastFocusedElement = document.activeElement;
+      aboutModal.classList.add('active');
+      closeAboutBtn.focus();
+    });
+    
+    closeAboutBtn.addEventListener('click', () => {
+      aboutModal.classList.remove('active');
+      // Bug 38: Restore focus
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+      }
+    });
+    
     aboutModal.addEventListener('click', (e) => {
-      if(e.target === aboutModal) aboutModal.classList.remove('active');
+      if(e.target === aboutModal) {
+        aboutModal.classList.remove('active');
+        // Bug 38: Restore focus
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+      }
+    });
+    
+    // Bug 38: Trap focus within modal when open
+    aboutModal.addEventListener('keydown', (e) => {
+      if (!aboutModal.classList.contains('active')) return;
+      
+      if (e.key === 'Escape') {
+        aboutModal.classList.remove('active');
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+      }
+      
+      if (e.key === 'Tab') {
+        const focusableElements = aboutModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
     });
 
   </script>
