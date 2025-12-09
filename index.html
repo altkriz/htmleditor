@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- Content Security Policy (Bug 8) -->
+  <!-- Note: 'unsafe-inline' and 'unsafe-eval' are required for Monaco Editor and inline styles -->
+  <!-- Monaco Editor uses eval() for its web worker functionality -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://text.pollinations.ai; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://text.pollinations.ai; frame-src 'self' blob: data:;">
   
   <!-- SEO Meta Tags -->
@@ -548,12 +550,12 @@
     });
     
     // Bug 30: Add error handling for Monaco loader
-    window.monacoLoadTimeout = setTimeout(() => {
+    let monacoLoadTimeout = setTimeout(() => {
       alert('Failed to load Monaco Editor. Please check your internet connection and refresh the page.');
     }, 15000);
     
     require(['vs/editor/editor.main'], function() {
-      clearTimeout(window.monacoLoadTimeout);
+      clearTimeout(monacoLoadTimeout);
       
       htmlModel = monaco.editor.createModel(DEFAULT_CODE.html, 'html');
       cssModel = monaco.editor.createModel(DEFAULT_CODE.css, 'css');
@@ -610,7 +612,7 @@
       });
     }, function(err) {
       // Bug 30: Handle Monaco load error
-      clearTimeout(window.monacoLoadTimeout);
+      clearTimeout(monacoLoadTimeout);
       console.error('Monaco failed to load:', err);
       alert('Failed to load Monaco Editor: ' + err.message + '\nPlease refresh the page.');
     });
@@ -1111,9 +1113,11 @@
 
     // --- Other Actions ---
     document.getElementById('btn-download').addEventListener('click', () => {
-      // Bug 44: Sanitize filename
+      // Bug 44: Sanitize filename - allow alphanumeric, dash, underscore, and convert spaces to dashes
       const rawFilename = filenameInput.value || 'project';
-      const sanitizedFilename = rawFilename.replace(/[^a-zA-Z0-9_-]/g, '_');
+      const sanitizedFilename = rawFilename
+        .replace(/\s+/g, '-')  // Convert spaces to dashes
+        .replace(/[^a-zA-Z0-9_-]/g, '_');  // Replace invalid chars with underscore
       
       const blob = new Blob([getCombinedCode()], {type: 'text/html'});
       const url = URL.createObjectURL(blob);
@@ -1130,8 +1134,12 @@
       const win = window.open('', '_blank', 'noopener,noreferrer');
       if (win) {
         win.opener = null; // Additional protection
-        win.document.write(getCombinedCode());
-        win.document.close();
+        // Use srcdoc approach instead of document.write to avoid XSS risks
+        const blob = new Blob([getCombinedCode()], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        win.location.href = url;
+        // Revoke URL after a delay to allow loading
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
     });
 
