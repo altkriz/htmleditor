@@ -1,7 +1,7 @@
 # Bugs List
 
-Number | Bug | Suggested Fix
---- | --- | ---
+| Number | Bug | Suggested Fix |
+| --- | --- | --- |
 1 | Chat messages are injected into the DOM with `innerHTML` (`addChatMsg` uses the raw user text), enabling immediate XSS if a user types markup (e.g., `<img onerror=alert()>`). | Insert messages with `textContent` or sanitize user input before rendering.
 2 | Project names are written with `innerHTML` in `renderProjects`, so a crafted project name stored in `localStorage` will execute when the sidebar renders (stored XSS). | Build project cards with DOM APIs or escape text before insertion.
 3 | Inline `onclick` handlers embed unsanitized project ids in strings; a tampered `localStorage` entry containing quotes can break markup or execute script. | Avoid inline handlers and bind events via `addEventListener` with sanitized data attributes.
@@ -28,8 +28,8 @@ Number | Bug | Suggested Fix
 24 | “Mandatory filename before download” is promised, but downloads proceed with a default name when the input is empty. | Enforce non-empty filenames (or prompt) before allowing download.
 25 | “Import sample templates” is listed as a capability, but there is no UI or code path providing templates. | Either implement template importers or remove the advertised feature.
 26 | README mentions a social footer; the live UI has none, so expected links are missing. | Add the footer or update documentation/screenshots.
-27 | `<link rel="canonical">` points to `https://altkriz.github.io/htmleditor/`, which is incorrect for this deployment and hurts SEO. | Update the canonical URL to the actual CloudCompile hosting location.
-28 | Open Graph/Twitter images reference `https://altkriz.github.io/htmleditor/img/logo.png`, which may 404 and shows the wrong branding for this fork. | Host the assets within the repo and reference them with correct URLs.
+27 | `<link rel="canonical">` points to `https://altkriz.github.io/htmleditor/`, which is incorrect for this deployment and hurts SEO. | Update the canonical URL to match the live URL for this project.
+28 | Open Graph/Twitter images reference `https://altkriz.github.io/htmleditor/img/logo.png`, which may 404 and shows the wrong branding for this repository. | Host the assets within the repo and reference them with correct URLs.
 29 | The favicon links to a remote icon (`altkriz.github.io`) even though `favicon.ico` exists locally, so offline/favicon loads can fail. | Point favicon links to the local asset or include a fallback.
 30 | Monaco loader is only pulled from a CDN with no fallback; if the CDN is blocked the editor never initializes and no error is shown. | Add a local fallback bundle or display a graceful error when Monaco fails to load.
 31 | AI calls lack timeouts/abort handling; a stalled request leaves the spinner for several seconds and provides no recovery guidance. | Use `AbortController` with a reasonable timeout and surface retry guidance.
