@@ -36,8 +36,8 @@ KrizVibe Editor uses the **same engine as VS Code** — Monaco Editor — delive
 - Three separate tabs  
 - Instant live preview  
 
-📸 Screenshot (Light Theme)
-![Editor Light Theme](https://github.com/altkriz/htmleditor/blob/main/img/image1.png)
+📸 Screenshot (Editor Interface)
+![Editor Interface](https://github.com/altkriz/htmleditor/blob/main/img/image1.png)
 
 ---
 
@@ -53,36 +53,26 @@ All save features in KrizVibe Editor use **localStorage**, ensuring:
 Users can:
 
 - Save unlimited projects locally  
-- Auto-save drafts  
+- Auto-save drafts automatically  
 - Load/update projects  
-- Import sample templates  
 - Delete saved sessions  
 
-📸 Screenshot (Dark Theme — Project Panel)
+📸 Screenshot (Project Panel)
 ![Local Save Panel](https://github.com/altkriz/htmleditor/blob/main/img/image4.png)
-
----
-
-### 🌗 Light & Dark Mode
-
-KrizVibe Editor features a sleek dual-theme interface with a toggle available in the navbar.
-
-📸 Screenshot (About Section — Dark Theme)
-![About Section Dark](https://github.com/altkriz/htmleditor/blob/main/img/image3.png)
 
 ---
 
 ### 📌 Additional Features
 
 - Real-time live preview (auto updates)
-- Mandatory filename before download
 - Download code as `.html` file
 - Open preview in a new tab
 - Responsive layout (desktop priority, mobile supported)
 - Modern UI with glass effects
-- Social footer + about page
+- About page with social links
 - Sidepanel for project management
-- 100% offline capable
+
+**Note:** The editor requires an internet connection for Monaco Editor CDN, Font Awesome, Google Fonts, and the AI features powered by Pollinations API.
 
 ---
 
