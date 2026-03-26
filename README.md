@@ -23,7 +23,7 @@ KrizVibe AI is the highlight of the entire editor. It is a fully integrated, aut
 - Encourages creativity, rapid prototyping, and futuristic vibe coding  
 
 📸 Screenshot (KrizVibe AI Panel)
-![KrizVibe AI](https://github.com/altkriz/htmleditor/blob/main/img/image2.png)
+![KrizVibe AI](https://github.com/altkriz/htmleditor/blob/main/img/scr1.png)
 
 ---
 
@@ -37,7 +37,7 @@ KrizVibe Editor uses the **same engine as VS Code** — Monaco Editor — delive
 - Instant live preview  
 
 📸 Screenshot (Editor Interface)
-![Editor Interface](https://github.com/altkriz/htmleditor/blob/main/img/image1.png)
+![Editor Interface](https://github.com/altkriz/htmleditor/blob/main/img/scr1.png)
 
 ---
 
@@ -58,7 +58,7 @@ Users can:
 - Delete saved sessions  
 
 📸 Screenshot (Project Panel)
-![Local Save Panel](https://github.com/altkriz/htmleditor/blob/main/img/image4.png)
+![Local Save Panel](https://github.com/altkriz/htmleditor/blob/main/img/scr1.png)
 
 ---
 
