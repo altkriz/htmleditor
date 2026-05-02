@@ -797,7 +797,7 @@
       aiInput.value = '';
       aiInput.disabled = true;
 
-      addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating code with Kimi K2...');
+      addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating code...');
 
       const systemPrompt = `You are KrizVibe AI, an expert web developer specialized in creating stunning, modern web interfaces.
 Current Code Context:
@@ -811,8 +811,7 @@ Instructions:
 1. Return ONLY the updated code.
 2. Format response strictly as:
 [HTML]
-...code...
-[CSS]
+...code...[CSS]
 ...code...
 [JS]
 ...code...
@@ -828,8 +827,8 @@ Instructions:
             'X-KrizVibe-Token': AI_SECRET_TOKEN
           },
           body: JSON.stringify({
-            messages: [
-              { role: 'system', content: 'You are KrizVibe AI, an expert web developer. Always return code in the exact format: [HTML]...code...[CSS]...code...[JS]...code... with no explanations.' },
+            messages:[
+              { role: 'system', content: 'You are KrizVibe AI, an expert web developer. Always return code in the exact format:[HTML]...code...[CSS]...code...[JS]...code... with no explanations.' },
               { role: 'user', content: systemPrompt }
             ]
           })
