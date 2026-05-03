@@ -40,26 +40,46 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
     :root {
-      /* Color Palette - Midnight Pro */
-      --bg-app: #0d1117;
-      --bg-panel: #161b22;
-      --bg-input: #010409;
-      --border: #30363d;
-      --accent: #2f81f7;
-      --accent-hover: #58a6ff;
-      --text-main: #c9d1d9;
-      --text-muted: #8b949e;
-      --success: #238636;
-      --danger: #da3633;
+      /* Color Palette - Obsidian Glow */
+      --bg-void: #06080c;
+      --bg-app: #0a0d14;
+      --bg-panel: #10141c;
+      --bg-elevated: #161b26;
+      --bg-input: #0c0f16;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-subtle: rgba(255, 255, 255, 0.03);
+      --accent: #00d4aa;
+      --accent-glow: rgba(0, 212, 170, 0.25);
+      --accent-hover: #00ffcc;
+      --accent-dim: #00a888;
+      --text-main: #e8edf5;
+      --text-muted: #6b7a90;
+      --text-dim: #3d4a5c;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #8b5cf6;
+      --blue: #3b82f6;
+      --orange: #f97316;
 
-      --header-h: 50px;
-      --font-ui: 'Inter', system-ui, sans-serif;
+      --header-h: 56px;
+      --font-ui: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+
+      --shadow-glow: 0 0 40px var(--accent-glow);
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -69,7 +89,7 @@
 
     body {
       margin: 0;
-      background-color: var(--bg-app);
+      background: var(--bg-void);
       color: var(--text-main);
       font-family: var(--font-ui);
       height: 100vh;
@@ -78,30 +98,121 @@
       flex-direction: column;
     }
 
+    /* Animated Background */
+    .bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-canvas::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(ellipse 800px 600px at 20% 20%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 600px 800px at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 1000px 400px at 50% 100%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+      animation: bgFloat 30s ease-in-out infinite;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(2%, 1%) rotate(1deg); }
+      66% { transform: translate(-1%, 2%) rotate(-1deg); }
+    }
+
+    /* Grid Pattern */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    }
+
     /* --- Header --- */
     .app-header {
       height: var(--header-h);
-      background-color: var(--bg-panel);
+      background: linear-gradient(180deg, var(--bg-panel) 0%, rgba(16, 20, 28, 0.95) 100%);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 20px;
       flex-shrink: 0;
       z-index: 30;
+      position: relative;
+    }
+
+    .app-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-weight: 600;
       color: var(--text-main);
+      font-size: 16px;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+      box-shadow: 0 2px 12px var(--accent-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+    }
+
+    .brand-label {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .brand-name {
+      font-weight: 700;
       font-size: 15px;
     }
 
-    .brand i {
-      color: var(--accent);
+    .brand-tag {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 0.5px;
     }
 
     .header-controls {
@@ -111,84 +222,120 @@
     }
 
     .btn {
-      background: var(--bg-panel);
+      background: var(--bg-elevated);
       border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
       font-size: 12px;
+      font-weight: 500;
       cursor: pointer;
       font-family: var(--font-ui);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
+      gap: 7px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
     }
 
     .btn:hover {
-      background: #21262d;
-      border-color: #8b949e;
+      background: var(--bg-panel);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
     }
 
     .btn.primary {
-      background: var(--success);
-      color: white;
-      border-color: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+      color: #0a0d14;
+      border-color: transparent;
+      font-weight: 600;
+      box-shadow: 0 2px 16px var(--accent-glow);
     }
 
     .btn.primary:hover {
-      background: #2ea043;
+      background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%);
+      box-shadow: 0 4px 24px var(--accent-glow);
+    }
+
+    .btn.primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
     }
 
     .icon-btn {
       background: transparent;
-      border: none;
+      border: 1px solid var(--border);
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 16px;
-      padding: 8px;
-      border-radius: 4px;
-      transition: color 0.2s;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .icon-btn:hover {
-      color: var(--accent-hover);
-      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent);
+      background: rgba(0, 212, 170, 0.08);
+      border-color: rgba(0, 212, 170, 0.2);
     }
 
     .input-field {
       background: var(--bg-input);
       border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
       font-size: 12px;
-      font-family: var(--font-ui);
+      font-family: var(--font-mono);
+      transition: all 0.2s ease;
+      min-width: 140px;
     }
 
     .input-field:focus {
       border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
-    /* --- Main Workspace (Flex Column) --- */
+    .input-field::placeholder {
+      color: var(--text-dim);
+    }
+
+    /* --- Main Workspace --- */
     .workspace {
       flex: 1;
       display: flex;
       flex-direction: column;
-      /* STACK VERTICALLY */
       overflow: hidden;
       position: relative;
+      z-index: 1;
     }
 
-    /* --- Split View (Editor | Preview) --- */
+    /* --- Split View --- */
     .split-view {
       flex: 1;
-      /* Takes all available height not used by AI drawer */
       display: flex;
       flex-direction: row;
       overflow: hidden;
       min-height: 0;
-      /* Important for flex scrolling */
+      gap: 1px;
+      background: var(--border);
     }
 
     /* Left Panel: Editor */
@@ -196,64 +343,119 @@
       width: 50%;
       display: flex;
       flex-direction: column;
-      border-right: 1px solid var(--border);
       background: var(--bg-app);
       min-width: 0;
+      position: relative;
     }
 
     .tabs-container {
       display: flex;
       background: var(--bg-panel);
       border-bottom: 1px solid var(--border);
-      height: 36px;
+      height: 44px;
       flex-shrink: 0;
+      padding: 6px 8px;
+      gap: 4px;
+      align-items: center;
     }
 
     .tab {
-      padding: 0 16px;
-      font-size: 13px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 500;
       color: var(--text-muted);
       cursor: pointer;
-      border-right: 1px solid var(--border);
       background: transparent;
+      border: none;
       display: flex;
       align-items: center;
-      gap: 6px;
-      height: 100%;
+      gap: 8px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+      font-family: var(--font-ui);
+      letter-spacing: 0.2px;
     }
 
     .tab:hover {
-      background: var(--bg-app);
+      background: rgba(255, 255, 255, 0.04);
       color: var(--text-main);
     }
 
     .tab.active {
-      background: var(--bg-app);
-      color: var(--accent-hover);
-      border-top: 2px solid var(--accent);
+      background: var(--bg-elevated);
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .tab i {
+      font-size: 14px;
     }
 
     .editor-actions {
       margin-left: auto;
       display: flex;
       align-items: center;
-      padding-right: 10px;
-      gap: 8px;
+      padding-right: 4px;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 4px 10px;
+      background: var(--bg-input);
+      border-radius: 20px;
+      border: 1px solid var(--border);
     }
 
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: var(--text-muted);
+      background: var(--text-dim);
+      transition: all 0.3s ease;
     }
 
     .status-dot.saving {
-      background: #e3b341;
+      background: var(--warning);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+      animation: pulse 1s ease-in-out infinite;
     }
 
     .status-dot.saved {
       background: var(--success);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .run-btn {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+      border: none;
+      color: #0a0d14;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-ui);
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px var(--accent-glow);
+    }
+
+    .run-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
     #monaco-host {
@@ -266,92 +468,192 @@
       width: 50%;
       display: flex;
       flex-direction: column;
-      background: #ffffff;
+      background: #0e1016;
       min-width: 0;
+      position: relative;
     }
 
     .preview-header {
-      height: 36px;
-      background: #f0f0f0;
-      border-bottom: 1px solid #ddd;
+      height: 44px;
+      background: linear-gradient(180deg, #1a1d24 0%, #14171e 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 10px;
-      color: #333;
-      font-size: 12px;
+      padding: 0 14px;
+      color: #6b7280;
+      font-size: 11px;
       flex-shrink: 0;
     }
 
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .window-dot.red { background: #ff5f57; }
+    .window-dot.yellow { background: #febc2e; }
+    .window-dot.green { background: #28c840; }
+
+    .preview-pane:hover .window-dot {
+      transform: scale(1.1);
+    }
+
     .url-bar {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      padding: 2px 10px;
-      color: #666;
-      width: 200px;
-      text-align: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 4px 14px;
+      color: #4b5563;
       font-size: 11px;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .url-bar i {
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .preview-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #6b7280;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .preview-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      border-color: rgba(0, 212, 170, 0.2);
+    }
+
+    .preview-frame-container {
+      flex: 1;
+      position: relative;
+      background: #ffffff;
+      margin: 8px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 0 60px rgba(0, 0, 0, 0.1);
     }
 
     iframe {
       border: none;
       width: 100%;
-      flex: 1;
+      height: 100%;
     }
 
-    /* --- AI Drawer (Normal Flex Item) --- */
+    /* --- AI Drawer --- */
     .ai-drawer {
-      /* No absolute positioning! It sits naturally below split-view */
-      height: 40px;
-      /* Collapsed height */
-      background: var(--bg-panel);
+      height: 52px;
+      background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-elevated) 100%);
       border-top: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 10;
       flex-shrink: 0;
-      /* Prevent it from getting squished */
+      position: relative;
+    }
+
+    .ai-drawer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .ai-drawer.open::before {
+      opacity: 1;
     }
 
     .ai-drawer.open {
-      height: 350px;
+      height: 380px;
     }
 
     .ai-header {
-      height: 40px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 20px;
       cursor: pointer;
-      border-bottom: 1px solid transparent;
       flex-shrink: 0;
+      transition: background 0.2s ease;
     }
 
-    .ai-drawer.open .ai-header {
-      border-bottom-color: var(--border);
+    .ai-header:hover {
+      background: rgba(255, 255, 255, 0.02);
     }
 
     .ai-title {
       font-weight: 600;
-      color: var(--accent-hover);
+      color: var(--accent);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    .ai-title i {
+      font-size: 16px;
+    }
+
+    .ai-badge {
+      background: var(--accent-glow);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .ai-toggle-icon {
+      color: var(--text-muted);
+      font-size: 14px;
+      transition: transform 0.3s ease;
+    }
+
+    .ai-drawer.open .ai-toggle-icon {
+      transform: rotate(180deg);
     }
 
     .ai-content {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 0;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s;
+      transition: opacity 0.3s ease 0.1s;
     }
 
     .ai-drawer.open .ai-content {
@@ -362,9 +664,9 @@
     .chat-area {
       flex: 1;
       overflow-y: auto;
-      padding: 15px;
+      padding: 16px 20px;
       font-family: var(--font-ui);
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -372,26 +674,37 @@
 
     .chat-msg {
       max-width: 85%;
-      padding: 10px 14px;
-      border-radius: 8px;
-      line-height: 1.5;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      line-height: 1.6;
+      animation: msgSlide 0.3s ease;
+    }
+
+    @keyframes msgSlide {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
     }
 
     .chat-msg.user {
       align-self: flex-end;
-      background: var(--accent);
-      color: white;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+      color: #0a0d14;
+      font-weight: 500;
+      border-bottom-right-radius: 4px;
     }
 
     .chat-msg.ai {
       align-self: flex-start;
-      background: #21262d;
+      background: var(--bg-elevated);
       border: 1px solid var(--border);
       color: var(--text-main);
+      border-bottom-left-radius: 4px;
     }
 
     .chat-input-area {
-      padding: 10px 16px;
+      padding: 12px 20px 16px;
       background: var(--bg-input);
       border-top: 1px solid var(--border);
       display: flex;
@@ -401,86 +714,216 @@
 
     #ai-input {
       flex: 1;
-      background: transparent;
-      border: none;
-      color: white;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-main);
       font-family: var(--font-ui);
-      font-size: 14px;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      transition: all 0.2s ease;
+    }
+
+    #ai-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    #ai-input::placeholder {
+      color: var(--text-dim);
     }
 
     #ai-send {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
       border: none;
-      color: white;
-      border-radius: 4px;
-      width: 32px;
-      height: 32px;
+      color: #0a0d14;
+      border-radius: var(--radius-lg);
+      width: 44px;
+      height: 44px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 12px var(--accent-glow);
     }
 
-    /* --- Side Panel (Projects) --- */
+    #ai-send:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    #ai-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* --- Side Panel --- */
+    .side-panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 40;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .side-panel-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
     .side-panel {
       position: fixed;
-      top: var(--header-h);
+      top: 0;
       bottom: 0;
-      left: -300px;
-      width: 300px;
+      left: 0;
+      width: 340px;
       background: var(--bg-panel);
       border-right: 1px solid var(--border);
       z-index: 50;
-      transition: left 0.3s ease;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
+      box-shadow: var(--shadow-elevated);
     }
 
     .side-panel.active {
-      left: 0;
+      transform: translateX(0);
     }
 
     .panel-header {
-      padding: 15px;
+      padding: 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: var(--bg-elevated);
+    }
+
+    .panel-title {
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title i {
+      color: var(--accent);
+    }
+
+    .panel-close {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .panel-close:hover {
+      color: var(--danger);
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.1);
     }
 
     .panel-content {
       flex: 1;
       overflow-y: auto;
-      padding: 10px;
+      padding: 16px;
     }
 
     .project-card {
       background: var(--bg-app);
       border: 1px solid var(--border);
-      padding: 10px;
-      border-radius: 6px;
+      padding: 14px 16px;
+      border-radius: var(--radius-lg);
       margin-bottom: 10px;
       cursor: pointer;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
 
     .project-card:hover {
-      border-color: var(--accent);
+      border-color: rgba(0, 212, 170, 0.3);
+      background: var(--bg-elevated);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-name {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .project-name i {
+      color: var(--orange);
+      font-size: 14px;
     }
 
     .project-meta {
       display: flex;
       justify-content: space-between;
       font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 6px;
+      color: var(--text-dim);
+      margin-top: 8px;
     }
 
     .project-actions {
-      margin-top: 8px;
+      margin-top: 12px;
       display: flex;
-      gap: 5px;
-      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .project-actions .icon-btn {
+      flex: 1;
+      justify-content: center;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .empty-projects {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .empty-projects i {
+      font-size: 32px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+      display: block;
     }
 
     /* --- Modal --- */
@@ -488,7 +931,7 @@
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(8px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -500,33 +943,114 @@
     }
 
     .modal-box {
-      background: var(--bg-panel);
+      background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-elevated) 100%);
       border: 1px solid var(--border);
-      width: 400px;
+      width: 420px;
       max-width: 90%;
-      border-radius: 8px;
-      padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: var(--shadow-elevated);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+    }
+
+    .modal-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .modal-desc {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 14px;
     }
 
     .social-links {
       display: flex;
-      gap: 15px;
-      margin-top: 20px;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .social-link {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
       justify-content: center;
-    }
-
-    .social-links a {
+      gap: 10px;
       color: var(--text-muted);
-      font-size: 20px;
-      transition: color 0.2s;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
     }
 
-    .social-links a:hover {
+    .social-link:hover {
+      background: var(--bg-elevated);
       color: var(--accent);
+      border-color: rgba(0, 212, 170, 0.3);
+    }
+
+    .social-link i {
+      font-size: 18px;
+    }
+
+    .modal-footer {
+      text-align: right;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
     }
 
     /* Responsive */
+    @media (max-width: 900px) {
+      .brand-label {
+        display: none;
+      }
+
+      .header-controls {
+        gap: 6px;
+      }
+
+      .btn span {
+        display: none;
+      }
+
+      .input-field {
+        width: 100px;
+        min-width: 80px;
+      }
+    }
+
     @media (max-width: 768px) {
       .split-view {
         flex-direction: column;
@@ -537,47 +1061,100 @@
         width: 100%;
         height: 50%;
       }
+
+      .ai-drawer.open {
+        height: 300px;
+      }
     }
 
+    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
 
     ::-webkit-scrollbar-track {
-      background: var(--bg-app);
+      background: transparent;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #484f58;
+      background: var(--text-dim);
       border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--accent-glow);
+      color: var(--text-main);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Animated Background -->
+  <div class="bg-canvas"></div>
+  <div class="bg-grid"></div>
 
   <!-- Header -->
   <header class="app-header">
     <div class="brand">
-      <i class="fa-solid fa-bolt"></i>
-      KrizVibe Editor
+      <div class="brand-icon">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <div class="brand-label">
+        <span class="brand-name">KrizVibe Editor</span>
+        <span class="brand-tag">AI-Powered Playground</span>
+      </div>
     </div>
     <div class="header-controls">
-      <button class="btn" id="btn-projects"><i class="fa-regular fa-folder-open"></i> Projects</button>
-      <button class="btn" id="btn-new"><i class="fa-solid fa-plus"></i> New</button>
+      <button class="btn" id="btn-projects">
+        <i class="fa-regular fa-folder-open"></i>
+        <span>Projects</span>
+      </button>
+      <button class="btn" id="btn-new">
+        <i class="fa-solid fa-plus"></i>
+        <span>New</span>
+      </button>
       <input type="text" id="filename-input" class="input-field" placeholder="project-name" value="untitled">
-      <button class="btn primary" id="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-      <button class="btn" id="btn-download" title="Download HTML"><i class="fa-solid fa-download"></i></button>
-      <button class="icon-btn" id="btn-about" title="About"><i class="fa-regular fa-circle-question"></i></button>
+      <button class="btn primary" id="btn-save">
+        <i class="fa-solid fa-floppy-disk"></i>
+        <span>Save</span>
+      </button>
+      <button class="icon-btn" id="btn-download" title="Download HTML">
+        <i class="fa-solid fa-download"></i>
+      </button>
+      <button class="icon-btn" id="btn-about" title="About">
+        <i class="fa-regular fa-circle-question"></i>
+      </button>
     </div>
   </header>
 
   <!-- Projects Sidebar -->
+  <div class="side-panel-overlay" id="side-panel-overlay"></div>
   <aside class="side-panel" id="side-panel">
     <div class="panel-header">
-      <span>Saved Projects</span>
-      <button class="icon-btn" id="close-side"><i class="fa-solid fa-xmark"></i></button>
+      <div class="panel-title">
+        <i class="fa-regular fa-folder-open"></i>
+        Saved Projects
+      </div>
+      <button class="panel-close" id="close-side">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
     <div class="panel-content" id="projects-list"></div>
   </aside>
@@ -585,18 +1162,29 @@
   <!-- Main Workspace -->
   <div class="workspace">
 
-    <!-- SPLIT VIEW WRAPPER -->
+    <!-- Split View -->
     <div class="split-view">
       <!-- Editor Column -->
       <div class="editor-pane">
         <div class="tabs-container">
-          <div class="tab active" data-lang="html"><i class="fa-brands fa-html5" style="color:#e34c26"></i> HTML</div>
-          <div class="tab" data-lang="css"><i class="fa-brands fa-css3-alt" style="color:#264de4"></i> CSS</div>
-          <div class="tab" data-lang="js"><i class="fa-brands fa-js" style="color:#f7df1e"></i> JS</div>
+          <button class="tab active" data-lang="html">
+            <i class="fa-brands fa-html5" style="color:#e34c26"></i> HTML
+          </button>
+          <button class="tab" data-lang="css">
+            <i class="fa-brands fa-css3-alt" style="color:#264de4"></i> CSS
+          </button>
+          <button class="tab" data-lang="js">
+            <i class="fa-brands fa-js" style="color:#f7df1e"></i> JS
+          </button>
 
           <div class="editor-actions">
-            <div class="status-dot" id="autosave-dot" title="Autosave Status"></div>
-            <button class="icon-btn" id="btn-run" title="Force Run"><i class="fa-solid fa-play"></i></button>
+            <div class="status-indicator">
+              <div class="status-dot" id="autosave-dot"></div>
+              <span id="status-text">Ready</span>
+            </div>
+            <button class="run-btn" id="btn-run" title="Run Preview">
+              <i class="fa-solid fa-play"></i> Run
+            </button>
           </div>
         </div>
         <div id="monaco-host"></div>
@@ -605,36 +1193,48 @@
       <!-- Preview Column -->
       <div class="preview-pane">
         <div class="preview-header">
-          <div style="display:flex; gap:6px">
-            <div style="width:10px; height:10px; border-radius:50%; background:#ff5f56"></div>
-            <div style="width:10px; height:10px; border-radius:50%; background:#ffbd2e"></div>
-            <div style="width:10px; height:10px; border-radius:50%; background:#27c93f"></div>
+          <div class="window-dots">
+            <div class="window-dot red"></div>
+            <div class="window-dot yellow"></div>
+            <div class="window-dot green"></div>
           </div>
-          <div class="url-bar">localhost:8080/preview</div>
-          <button class="icon-btn" id="btn-open-new" style="color:#333"><i
-              class="fa-solid fa-arrow-up-right-from-square"></i></button>
+          <div class="url-bar">
+            <i class="fa-solid fa-lock"></i>
+            localhost:8080/preview
+          </div>
+          <div class="preview-actions">
+            <button class="preview-btn" id="btn-open-new" title="Open in New Tab">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </button>
+          </div>
         </div>
-        <iframe id="preview-frame" sandbox="allow-scripts allow-modals allow-forms allow-same-origin"></iframe>
+        <div class="preview-frame-container">
+          <iframe id="preview-frame" sandbox="allow-scripts allow-modals allow-forms allow-same-origin"></iframe>
+        </div>
       </div>
     </div>
-    <!-- END SPLIT VIEW -->
 
-    <!-- AI Drawer (Now sits below split view, doesn't overlay) -->
+    <!-- AI Drawer -->
     <div class="ai-drawer" id="ai-drawer">
       <div class="ai-header" id="ai-toggle">
-        <div class="ai-title"><i class="fa-solid fa-robot"></i> KrizVibe AI Assistant</div>
-        <i class="fa-solid fa-chevron-up" id="ai-chevron"></i>
+        <div class="ai-title">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          KrizVibe AI Assistant
+          <span class="ai-badge">GPT-4</span>
+        </div>
+        <i class="fa-solid fa-chevron-up ai-toggle-icon" id="ai-chevron"></i>
       </div>
       <div class="ai-content">
         <div class="chat-area" id="chat-area">
           <div class="chat-msg ai">
-            <strong>AI:</strong> Ready to code. Describe what you want to build (e.g., "A login form with a dark
-            glassmorphism theme").
+            <strong>Welcome!</strong> I'm ready to help you build. Describe what you want to create (e.g., "A login form with glassmorphism dark theme").
           </div>
         </div>
         <div class="chat-input-area">
           <input type="text" id="ai-input" placeholder="Ask KrizVibe to generate code..." autocomplete="off">
-          <button id="ai-send"><i class="fa-solid fa-paper-plane"></i></button>
+          <button id="ai-send">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -644,15 +1244,24 @@
   <!-- About Modal -->
   <div class="modal-overlay" id="about-modal">
     <div class="modal-box">
-      <h2 style="margin-top:0; color:var(--accent)">About KrizVibe</h2>
-      <p style="color:var(--text-muted); line-height:1.6">
-        Experience the vibe of coding with KrizVibe, a real-time HTML, CSS, and JavaScript editor powered by AI.
+      <div class="modal-logo">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <h2 class="modal-title">KrizVibe Editor</h2>
+      <p class="modal-desc">
+        Experience the vibe of coding with KrizVibe, a real-time HTML, CSS, and JavaScript editor powered by AI. Build beautiful websites instantly with natural language prompts.
       </p>
       <div class="social-links">
-        <a href="https://github.com/altkriz" target="_blank"><i class="fa-brands fa-github"></i></a>
-        <a href="https://x.com/altkriz" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+        <a href="https://github.com/altkriz" target="_blank" class="social-link">
+          <i class="fa-brands fa-github"></i>
+          GitHub
+        </a>
+        <a href="https://x.com/altkriz" target="_blank" class="social-link">
+          <i class="fa-brands fa-twitter"></i>
+          Twitter
+        </a>
       </div>
-      <div style="text-align:right; margin-top:20px;">
+      <div class="modal-footer">
         <button class="btn" id="close-about">Close</button>
       </div>
     </div>
@@ -672,7 +1281,7 @@
     // --- Defaults ---
     const DEFAULT_CODE = {
       html: '<div class="container">\n  <h1>Hello KrizVibe</h1>\n  <p>Start editing or ask AI to build something!</p>\n  <button id="btn">Click Me</button>\n</div>',
-      css: 'body {\n  font-family: "Inter", sans-serif;\n  background: #f0f2f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\n.container {\n  background: white;\n  padding: 2rem;\n  border-radius: 12px;\n  box-shadow: 0 4px 20px rgba(0,0,0,0.1);\n  text-align: center;\n}\n\nh1 { color: #2f81f7; }\n\nbutton {\n  background: #2f81f7;\n  color: white;\n  border: none;\n  padding: 10px 20px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\nbutton:hover { background: #58a6ff; }',
+      css: 'body {\n  font-family: "Inter", system-ui, sans-serif;\n  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);\n  min-height: 100vh;\n  margin: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.container {\n  background: rgba(255, 255, 255, 0.05);\n  backdrop-filter: blur(10px);\n  padding: 3rem;\n  border-radius: 20px;\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  text-align: center;\n  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);\n}\n\nh1 {\n  color: #00d4aa;\n  font-size: 2.5rem;\n  margin-bottom: 0.5rem;\n}\n\np {\n  color: #8b949e;\n  margin-bottom: 1.5rem;\n}\n\nbutton {\n  background: linear-gradient(135deg, #00d4aa 0%, #00a888 100%);\n  color: #0a0d14;\n  border: none;\n  padding: 12px 28px;\n  border-radius: 10px;\n  cursor: pointer;\n  font-weight: 600;\n  font-size: 14px;\n  transition: all 0.2s ease;\n  box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);\n}\n\nbutton:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 25px rgba(0, 212, 170, 0.4);\n}',
       js: 'document.getElementById("btn").addEventListener("click", () => {\n  alert("Welcome to KrizVibe Editor!");\n});'
     };
 
@@ -688,15 +1297,44 @@
         model: htmlModel,
         theme: 'vs-dark',
         fontSize: 14,
-        fontFamily: 'JetBrains Mono',
+        fontFamily: 'JetBrains Mono, monospace',
         minimap: { enabled: false },
-        automaticLayout: false, // We handle layout manually for better performance
-        padding: { top: 20 },
+        automaticLayout: false,
+        padding: { top: 20, bottom: 20 },
         scrollBeyondLastLine: false,
-        smoothScrolling: true
+        smoothScrolling: true,
+        cursorBlinking: 'smooth',
+        cursorSmoothCaretAnimation: true,
+        renderLineHighlight: 'all',
+        lineNumbers: 'on',
+        lineNumbersMinChars: 4,
+        folding: true,
+        bracketPairColorization: { enabled: true }
       });
 
-      // Add auto-resize observer
+      // Define custom dark theme
+      monaco.editor.defineTheme('krizvibe-dark', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [
+          { token: 'comment', foreground: '6b7a90', fontStyle: 'italic' },
+          { token: 'keyword', foreground: '00d4aa' },
+          { token: 'string', foreground: 'f59e0b' },
+          { token: 'number', foreground: '8b5cf6' },
+          { token: 'type', foreground: '3b82f6' },
+        ],
+        colors: {
+          'editor.background': '#0a0d14',
+          'editor.foreground': '#e8edf5',
+          'editor.lineHighlightBackground': '#161b2650',
+          'editor.selectionBackground': '#00d4aa30',
+          'editorCursor.foreground': '#00d4aa',
+          'editorLineNumber.foreground': '#3d4a5c',
+          'editorLineNumber.activeForeground': '#00d4aa',
+        }
+      });
+      monaco.editor.setTheme('krizvibe-dark');
+
       window.addEventListener('resize', () => editor.layout());
 
       htmlModel.onDidChangeContent(triggerUpdate);
@@ -731,6 +1369,8 @@
         <!DOCTYPE html>
         <html>
         <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>${css}</style>
         </head>
         <body>
@@ -744,49 +1384,43 @@
     function updatePreview() {
       const frame = document.getElementById('preview-frame');
       frame.srcdoc = getCombinedCode();
-      document.getElementById('autosave-dot').classList.remove('saving');
-      document.getElementById('autosave-dot').classList.add('saved');
+      const dot = document.getElementById('autosave-dot');
+      const text = document.getElementById('status-text');
+      dot.classList.remove('saving');
+      dot.classList.add('saved');
+      text.textContent = 'Saved';
     }
 
     function triggerUpdate() {
-      document.getElementById('autosave-dot').classList.add('saving');
-      document.getElementById('autosave-dot').classList.remove('saved');
+      const dot = document.getElementById('autosave-dot');
+      const text = document.getElementById('status-text');
+      dot.classList.add('saving');
+      dot.classList.remove('saved');
+      text.textContent = 'Saving...';
       clearTimeout(autosaveTimer);
       autosaveTimer = setTimeout(updatePreview, 1000);
     }
 
     document.getElementById('btn-run').addEventListener('click', updatePreview);
 
-    // --- AI Logic (Groq via Secure PHP Backend) ---
+    // --- AI Logic ---
     const aiDrawer = document.getElementById('ai-drawer');
     const aiToggle = document.getElementById('ai-toggle');
     const aiInput = document.getElementById('ai-input');
     const aiSend = document.getElementById('ai-send');
     const chatArea = document.getElementById('chat-area');
 
-    // Secure backend configuration
     const AI_BACKEND_URL = 'https://kriztech.in/code/code.php';
     const AI_SECRET_TOKEN = 'terebaapkatokenhaikyabsdk';
 
-    // Toggle Drawer and Resize Editor
     aiToggle.addEventListener('click', () => {
       aiDrawer.classList.toggle('open');
-      const icon = document.getElementById('ai-chevron');
-
       if (aiDrawer.classList.contains('open')) {
-        icon.classList.remove('fa-chevron-up');
-        icon.classList.add('fa-chevron-down');
         aiInput.focus();
-      } else {
-        icon.classList.add('fa-chevron-up');
-        icon.classList.remove('fa-chevron-down');
       }
-
-      // IMPORTANT: Trigger editor layout update after transition
-      // This ensures code doesn't get hidden/cut off
       setTimeout(() => {
         if (editor) editor.layout();
-      }, 300); // Match CSS transition time
+      }, 400);
     });
 
     async function sendMessage() {
@@ -796,28 +1430,25 @@
       addChatMsg('user', text);
       aiInput.value = '';
       aiInput.disabled = true;
+      aiSend.disabled = true;
 
-      addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating code...');
+      addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating...');
 
-      const systemPrompt = `You are KrizVibe AI, an expert web developer specialized in creating stunning, modern web interfaces.
-Current Code Context:
+      const systemPrompt = `You are KrizVibe AI, an expert web developer.
+Current Code:
 HTML: ${htmlModel.getValue()}
 CSS: ${cssModel.getValue()}
 JS: ${jsModel.getValue()}
 
-User Request: ${text}
+Request: ${text}
 
-Instructions:
-1. Return ONLY the updated code.
-2. Format response strictly as:
+Return ONLY code in this format:
 [HTML]
-...code...[CSS]
+...code...
+[CSS]
 ...code...
 [JS]
-...code...
-3. Do not include explanations outside the code.
-4. Create modern, beautiful, and responsive designs.
-5. Use best practices for HTML5, CSS3, and ES6+ JavaScript.`;
+...code...`;
 
       try {
         const response = await fetch(AI_BACKEND_URL, {
@@ -827,8 +1458,8 @@ Instructions:
             'X-KrizVibe-Token': AI_SECRET_TOKEN
           },
           body: JSON.stringify({
-            messages:[
-              { role: 'system', content: 'You are KrizVibe AI, an expert web developer. Always return code in the exact format:[HTML]...code...[CSS]...code...[JS]...code... with no explanations.' },
+            messages: [
+              { role: 'system', content: 'Return code only in format: [HTML]...[CSS]...[JS]...' },
               { role: 'user', content: systemPrompt }
             ]
           })
@@ -840,15 +1471,11 @@ Instructions:
         }
 
         const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
+        if (data.error) throw new Error(data.error);
 
         const reply = data.choices[0].message.content;
-
         chatArea.removeChild(chatArea.lastChild);
-        addChatMsg('ai', "✨ Code updated based on your request.");
+        addChatMsg('ai', 'Code updated successfully!');
 
         const htmlMatch = reply.match(/\[HTML\]([\s\S]*?)(\[CSS\]|$)/);
         const cssMatch = reply.match(/\[CSS\]([\s\S]*?)(\[JS\]|$)/);
@@ -862,9 +1489,10 @@ Instructions:
 
       } catch (err) {
         chatArea.removeChild(chatArea.lastChild);
-        addChatMsg('ai', `<span style="color:#da3633">❌ Error: ${err.message}</span>`);
+        addChatMsg('ai', `<span style="color:#ef4444">Error: ${err.message}</span>`);
       } finally {
         aiInput.disabled = false;
+        aiSend.disabled = false;
         aiInput.focus();
       }
     }
@@ -880,13 +1508,25 @@ Instructions:
     aiSend.addEventListener('click', sendMessage);
     aiInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-    // --- Project Management (LocalStorage) ---
+    // --- Project Management ---
     const sidePanel = document.getElementById('side-panel');
+    const sidePanelOverlay = document.getElementById('side-panel-overlay');
     const projectsList = document.getElementById('projects-list');
     const filenameInput = document.getElementById('filename-input');
 
-    document.getElementById('btn-projects').addEventListener('click', () => sidePanel.classList.add('active'));
-    document.getElementById('close-side').addEventListener('click', () => sidePanel.classList.remove('active'));
+    function openSidePanel() {
+      sidePanel.classList.add('active');
+      sidePanelOverlay.classList.add('active');
+    }
+
+    function closeSidePanel() {
+      sidePanel.classList.remove('active');
+      sidePanelOverlay.classList.remove('active');
+    }
+
+    document.getElementById('btn-projects').addEventListener('click', openSidePanel);
+    document.getElementById('close-side').addEventListener('click', closeSidePanel);
+    sidePanelOverlay.addEventListener('click', closeSidePanel);
 
     function getProjects() {
       return JSON.parse(localStorage.getItem(PROJECT_KEY) || '[]');
@@ -920,17 +1560,35 @@ Instructions:
     function renderProjects() {
       const projects = getProjects();
       projectsList.innerHTML = '';
-      if (projects.length === 0) projectsList.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center; margin-top:20px">No saved projects</div>';
+
+      if (projects.length === 0) {
+        projectsList.innerHTML = `
+          <div class="empty-projects">
+            <i class="fa-regular fa-folder-open"></i>
+            No saved projects yet
+          </div>
+        `;
+        return;
+      }
 
       projects.forEach(p => {
         const card = document.createElement('div');
         card.className = 'project-card';
         card.innerHTML = `
-          <div style="font-weight:600; font-size:13px;">${p.name}</div>
-          <div class="project-meta">${p.date}</div>
+          <div class="project-name">
+            <i class="fa-regular fa-file-code"></i>
+            ${p.name}
+          </div>
+          <div class="project-meta">
+            <span>${p.date}</span>
+          </div>
           <div class="project-actions">
-            <button class="icon-btn" onclick="loadProject('${p.id}')"><i class="fa-solid fa-folder-open"></i></button>
-            <button class="icon-btn" style="color:var(--danger)" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+            <button class="icon-btn" onclick="loadProject('${p.id}')">
+              <i class="fa-solid fa-folder-open"></i> Open
+            </button>
+            <button class="icon-btn" style="color:var(--danger)" onclick="deleteProject('${p.id}')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>
         `;
         projectsList.appendChild(card);
@@ -946,7 +1604,7 @@ Instructions:
         jsModel.setValue(p.js);
         filenameInput.value = p.name;
         currentProjectId = p.id;
-        sidePanel.classList.remove('active');
+        closeSidePanel();
         updatePreview();
       }
     };
@@ -981,6 +1639,7 @@ Instructions:
       a.href = url;
       a.download = (filenameInput.value || 'project') + '.html';
       a.click();
+      URL.revokeObjectURL(url);
     });
 
     document.getElementById('btn-open-new').addEventListener('click', () => {
@@ -996,6 +1655,13 @@ Instructions:
       if (e.target === aboutModal) aboutModal.classList.remove('active');
     });
 
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveProject();
+      }
+    });
   </script>
 </body>
 
