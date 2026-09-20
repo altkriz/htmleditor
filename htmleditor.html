@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; frame-src 'self' data: blob:; connect-src 'none'; font-src data:; base-uri 'none'; form-action 'none';" />
+<title>KrizVibe Editor – Offline Code Playground</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+<style>
+:root {
+  --bg-void: #06080c;
+  --bg-app: #0a0d14;
+  --bg-panel: #10141c;
+  --bg-elevated: #161b26;
+  --bg-input: #0c0f16;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.03);
+  --accent: #00d4aa;
+  --accent-glow: rgba(0, 212, 170, 0.25);
+  --accent-hover: #00ffcc;
+  --accent-dim: #00a888;
+  --text-main: #e8edf5;
+  --text-muted: #6b7a90;
+  --text-dim: #3d4a5c;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --blue: #3b82f6;
+  --orange: #f97316;
+  --header-h: 56px;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-glow: 0 0 40px var(--accent-glow);
+  --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+* { box-sizing: border-box; outline: none; }
+body {
+  margin: 0;
+  background: var(--bg-void);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+::selection { background: var(--accent-glow); color: var(--text-main); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  height: var(--header-h);
+  background: linear-gradient(180deg, var(--bg-panel) 0%, rgba(16, 20, 28, 0.95) 100%);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 30;
+}
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+}
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 16px; letter-spacing: -0.3px; }
+.brand-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+.brand-icon svg { width: 18px; height: 18px; }
+.brand-label { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name { font-weight: 700; font-size: 15px; }
+.brand-tag { font-size: 10px; color: var(--text-muted); font-weight: 400; letter-spacing: 0.5px; }
+.header-controls { display: flex; gap: 8px; align-items: center; }
+
+.btn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+}
+.btn:hover { background: var(--bg-panel); border-color: rgba(255, 255, 255, 0.12); transform: translateY(-1px); }
+.btn.primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+  color: #0a0d14;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 2px 16px var(--accent-glow);
+}
+.btn.primary:hover { background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%); }
+.btn svg { width: 14px; height: 14px; }
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:hover { color: var(--accent); background: rgba(0, 212, 170, 0.08); border-color: rgba(0, 212, 170, 0.2); }
+.icon-btn svg { width: 16px; height: 16px; }
+
+.input-field {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  transition: all 0.2s ease;
+  min-width: 140px;
+}
+.input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.input-field::placeholder { color: var(--text-dim); }
+
+/* ---------- Workspace ---------- */
+.workspace { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+.split-view {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  min-height: 0;
+  gap: 1px;
+  background: var(--border);
+}
+.editor-pane, .preview-pane {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.editor-pane { background: var(--bg-app); }
+.preview-pane { background: #0e1016; }
+
+.tabs-container {
+  display: flex;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  height: 44px;
+  flex-shrink: 0;
+  padding: 6px 8px;
+  gap: 4px;
+  align-items: center;
+}
+.tab {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  font-family: var(--font-ui);
+}
+.tab:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
+.tab.active { background: var(--bg-elevated); color: var(--accent); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tab-dot { width: 8px; height: 8px; border-radius: 50%; }
+.tab[data-lang="html"] .tab-dot { background: #e34c26; }
+.tab[data-lang="css"] .tab-dot { background: #264de4; }
+.tab[data-lang="js"] .tab-dot { background: #f7df1e; }
+
+.editor-actions { margin-left: auto; display: flex; align-items: center; padding-right: 4px; gap: 10px; }
+.status-indicator {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 4px 10px;
+  background: var(--bg-input);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); transition: all 0.3s ease; }
+.status-dot.saving { background: var(--warning); box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); animation: pulse 1s ease-in-out infinite; }
+.status-dot.saved { background: var(--success); box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+.run-btn {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+  border: none;
+  color: #0a0d14;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-ui);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+.run-btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px var(--accent-glow); }
+.run-btn svg { width: 12px; height: 12px; }
+
+/* ---------- Editor ---------- */
+.editor-wrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: var(--bg-app);
+  position: relative;
+  min-height: 0;
+}
+.line-numbers {
+  padding: 16px 12px 16px 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  background: var(--bg-app);
+  user-select: none;
+  text-align: right;
+  min-width: 52px;
+  overflow: hidden;
+  border-right: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+.line-numbers .ln { display: block; height: 1.6em; line-height: 1.6em; }
+#code-editor {
+  flex: 1;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-main);
+  background: transparent;
+  border: none;
+  resize: none;
+  tab-size: 2;
+  overflow: auto;
+  white-space: pre;
+  caret-color: var(--accent);
+  outline: none;
+  min-width: 0;
+}
+
+/* ---------- Preview ---------- */
+.preview-header {
+  height: 44px;
+  background: linear-gradient(180deg, #1a1d24 0%, #14171e 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  color: #6b7280;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.window-dots { display: flex; gap: 6px; }
+.window-dot { width: 10px; height: 10px; border-radius: 50%; }
+.window-dot.red { background: #ff5f57; }
+.window-dot.yellow { background: #febc2e; }
+.window-dot.green { background: #28c840; }
+.url-bar {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 4px 14px;
+  color: #4b5563;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.url-bar .lock-icon { color: var(--accent); font-size: 10px; }
+.preview-actions { display: flex; gap: 6px; }
+.preview-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #6b7280;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--accent); }
+.preview-btn svg { width: 12px; height: 12px; display: block; }
+.preview-frame-container {
+  flex: 1;
+  position: relative;
+  background: #ffffff;
+  margin: 8px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 0 60px rgba(0, 0, 0, 0.1);
+  min-height: 0;
+}
+iframe { border: none; width: 100%; height: 100%; display: block; }
+
+/* ---------- Console ---------- */
+.console-container {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-app);
+  border-top: 1px solid var(--border);
+  height: 140px;
+  flex-shrink: 0;
+}
+.console-header {
+  height: 30px;
+  background: var(--bg-panel);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.console-header .left { display: flex; align-items: center; gap: 8px; }
+.console-header .left svg { width: 12px; height: 12px; }
+.console-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.console-line { display: flex; gap: 8px; padding: 2px 0; border-bottom: 1px solid var(--border-subtle); }
+.console-line:last-child { border-bottom: none; }
+.console-line .log-type { font-weight: 600; flex-shrink: 0; }
+.console-line.log .log-type { color: var(--text-muted); }
+.console-line.error .log-type { color: var(--danger); }
+.console-line.warn .log-type { color: var(--warning); }
+.console-line.info .log-type { color: var(--blue); }
+.console-line .log-content { white-space: pre-wrap; word-break: break-word; flex: 1; }
+.console-line.error .log-content { color: var(--danger); }
+.console-line.warn .log-content { color: var(--warning); }
+.console-empty { color: var(--text-dim); font-style: italic; }
+
+/* ---------- Side Panel ---------- */
+.side-panel-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.side-panel-overlay.active { opacity: 1; visibility: visible; }
+.side-panel {
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  width: 340px;
+  max-width: 90vw;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  z-index: 50;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-elevated);
+}
+.side-panel.active { transform: translateX(0); }
+.panel-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-elevated);
+}
+.panel-title { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.panel-title svg { color: var(--accent); width: 16px; height: 16px; }
+.panel-close {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease;
+}
+.panel-close:hover { color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+.panel-close svg { width: 16px; height: 16px; }
+.panel-content { flex: 1; overflow-y: auto; padding: 16px; }
+.project-card {
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.project-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent);
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.project-card:hover { border-color: rgba(0, 212, 170, 0.3); background: var(--bg-elevated); }
+.project-card:hover::before { opacity: 1; }
+.project-name {
+  font-weight: 600; font-size: 13px; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+  word-break: break-word;
+}
+.project-name svg { color: var(--orange); width: 14px; height: 14px; flex-shrink: 0; }
+.project-meta { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+.project-actions { margin-top: 12px; display: flex; gap: 6px; }
+.project-actions .icon-btn { flex: 1; justify-content: center; padding: 8px; font-size: 11px; gap: 5px; }
+.project-actions .icon-btn.danger:hover { color: var(--danger); border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08); }
+.empty-projects { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
+.empty-projects svg { width: 32px; height: 32px; margin-bottom: 12px; opacity: 0.5; }
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-elevated) 100%);
+  border: 1px solid var(--border);
+  width: 460px;
+  max-width: 90%;
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+  overflow: hidden;
+}
+.modal-box::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+}
+.modal-logo {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-glow);
+}
+.modal-logo svg { width: 24px; height: 24px; }
+.modal-title { font-size: 22px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.3px; }
+.modal-desc { color: var(--text-muted); line-height: 1.7; font-size: 14px; margin: 0 0 16px; }
+.modal-list { color: var(--text-muted); font-size: 13px; line-height: 1.8; padding-left: 20px; margin: 16px 0; }
+.modal-list li::marker { color: var(--accent); }
+.modal-footer { text-align: right; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+/* ---------- Drag & Drop Overlay ---------- */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(6, 8, 12, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+}
+.drop-overlay.active { opacity: 1; visibility: visible; }
+.drop-overlay-inner {
+  border: 3px dashed var(--accent);
+  border-radius: var(--radius-xl);
+  padding: 60px 80px;
+  text-align: center;
+  background: rgba(0, 212, 170, 0.04);
+  box-shadow: 0 0 60px rgba(0, 212, 170, 0.25), inset 0 0 40px rgba(0, 212, 170, 0.05);
+  animation: dropPulse 1.6s ease-in-out infinite;
+  max-width: 560px;
+}
+@keyframes dropPulse {
+  0%, 100% { box-shadow: 0 0 60px rgba(0, 212, 170, 0.25), inset 0 0 40px rgba(0, 212, 170, 0.05); }
+  50%      { box-shadow: 0 0 90px rgba(0, 212, 170, 0.45), inset 0 0 60px rgba(0, 212, 170, 0.10); }
+}
+.drop-overlay-inner svg {
+  width: 72px; height: 72px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  animation: dropBounce 1.6s ease-in-out infinite;
+}
+@keyframes dropBounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.drop-overlay-inner h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 10px;
+  letter-spacing: -0.3px;
+}
+.drop-overlay-inner p {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  margin: 0 0 16px;
+  letter-spacing: 0.5px;
+}
+.drop-overlay-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ---------- Toasts ---------- */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 13px;
+  box-shadow: var(--shadow-elevated);
+  animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 340px;
+  pointer-events: auto;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error   { border-left-color: var(--danger); }
+.toast.warn    { border-left-color: var(--warning); }
+.toast-title   { font-weight: 600; margin-bottom: 2px; }
+.toast-body    { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.toast.leaving { animation: toastOut 0.25s ease forwards; }
+@keyframes toastOut { to { opacity: 0; transform: translateX(40px); } }
+
+@media (max-width: 900px) {
+  .brand-label { display: none; }
+  .btn span { display: none; }
+  .input-field { width: 100px; min-width: 80px; }
+}
+@media (max-width: 768px) {
+  .split-view { flex-direction: column; }
+  .editor-pane, .preview-pane { width: 100%; height: 50%; }
+  .console-container { height: 110px; }
+  .drop-overlay-inner { padding: 40px 30px; }
+  .drop-overlay-inner svg { width: 52px; height: 52px; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+    </div>
+    <div class="brand-label">
+      <span class="brand-name">KrizVibe Editor</span>
+      <span class="brand-tag">100% OFFLINE PLAYGROUND</span>
+    </div>
+  </div>
+  <div class="header-controls">
+    <button class="btn" id="btn-projects" aria-label="Open saved projects">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <span>Projects</span>
+    </button>
+    <button class="btn" id="btn-new" aria-label="Create new project">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>New</span>
+    </button>
+    <label for="filename-input" class="sr-only">Project name</label>
+    <input type="text" id="filename-input" class="input-field" placeholder="project-name" value="untitled" aria-label="Project name">
+    <button class="btn primary" id="btn-save" aria-label="Save project">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      <span>Save</span>
+    </button>
+    <button class="icon-btn" id="btn-download" aria-label="Download project as HTML" title="Download as HTML">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-about" aria-label="About KrizVibe Editor" title="About">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="side-panel-overlay" id="side-panel-overlay"></div>
+<aside class="side-panel" id="side-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title-id" aria-hidden="true">
+  <div class="panel-header">
+    <div class="panel-title" id="panel-title-id">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Saved Projects
+    </div>
+    <button class="panel-close" id="close-side" aria-label="Close projects panel" title="Close">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="panel-content" id="projects-list"></div>
+</aside>
+
+<div class="workspace">
+  <div class="split-view">
+    <div class="editor-pane">
+      <div class="tabs-container" role="tablist" aria-label="Code editors">
+        <button class="tab active" data-lang="html" role="tab" aria-selected="true" aria-controls="code-editor"><span class="tab-dot" aria-hidden="true"></span> HTML</button>
+        <button class="tab" data-lang="css" role="tab" aria-selected="false" aria-controls="code-editor"><span class="tab-dot" aria-hidden="true"></span> CSS</button>
+        <button class="tab" data-lang="js" role="tab" aria-selected="false" aria-controls="code-editor"><span class="tab-dot" aria-hidden="true"></span> JS</button>
+        <div class="editor-actions">
+          <div class="status-indicator" aria-live="polite">
+            <div class="status-dot" id="autosave-dot" aria-hidden="true"></div>
+            <span id="status-text">Ready</span>
+          </div>
+          <button class="run-btn" id="btn-run" aria-label="Run preview" title="Run Preview">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run
+          </button>
+        </div>
+      </div>
+      <div class="editor-wrapper">
+        <div class="line-numbers" id="line-numbers" aria-hidden="true"></div>
+        <label for="code-editor" class="sr-only">Code editor</label>
+        <textarea id="code-editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Code editor"></textarea>
+      </div>
+    </div>
+
+    <div class="preview-pane">
+      <div class="preview-header">
+        <div class="window-dots" aria-hidden="true">
+          <div class="window-dot red"></div>
+          <div class="window-dot yellow"></div>
+          <div class="window-dot green"></div>
+        </div>
+        <div class="url-bar">
+          <span class="lock-icon" aria-hidden="true">🔒</span>
+          local-preview://offline
+        </div>
+        <div class="preview-actions">
+          <button class="preview-btn" id="btn-open-new" aria-label="Open preview in new tab" title="Open in New Tab">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="preview-frame-container">
+        <iframe id="preview-frame" title="Live preview" sandbox="allow-scripts"></iframe>
+      </div>
+      <div class="console-container">
+        <div class="console-header">
+          <div class="left">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Console
+          </div>
+          <button class="preview-btn" id="btn-clear-console" aria-label="Clear console output" title="Clear Console">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>
+        <div class="console-output" id="console-output" aria-live="polite" aria-label="Console output">
+          <div class="console-empty">Console output will appear here…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title-id" aria-hidden="true">
+  <div class="modal-box" id="about-modal-box">
+    <div class="modal-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+    </div>
+    <h2 class="modal-title" id="about-title-id">KrizVibe Editor — Offline Edition</h2>
+    <p class="modal-desc">A fully self-contained HTML/CSS/JS playground. No CDNs, no servers, no internet required.</p>
+    <ul class="modal-list">
+      <li>Zero external dependencies — works from <code>file://</code></li>
+      <li>Local project storage via <code>localStorage</code></li>
+      <li>Live preview with full <code>console</code> capture</li>
+      <li><strong>Drag &amp; drop</strong> .html / .css / .js / .json files or whole folders</li>
+      <li>HTML <code>&lt;style&gt;</code> and <code>&lt;script&gt;</code> blocks auto-split into tabs</li>
+      <li>Download your project as a single HTML file</li>
+      <li>Airplane-mode friendly ✈️</li>
+    </ul>
+    <div class="modal-footer">
+      <button class="btn primary" id="close-about" aria-label="Close about dialog">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div class="drop-overlay" id="drop-overlay" aria-hidden="true">
+  <div class="drop-overlay-inner">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+    <h2>Drop files to import</h2>
+    <p>.html &middot; .css &middot; .js &middot; .json &middot; or a folder</p>
+    <span class="drop-overlay-hint">HTML &lt;style&gt; and &lt;script&gt; blocks will be auto-split into their tabs</span>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   STATE
+============================================================ */
+const PROJECT_KEY = "krizvibe_offline_projects_v1";
+const DRAFT_KEY = "krizvibe_offline_draft_v1";
+const SESSION_KEY = "krizvibe_offline_session_v1";
+let activeLang = "html";
+let currentProjectId = null;
+let autosaveTimer = null;
+let draftTimer = null;
+
+const DEFAULT_CODE = {
+  html: `<div class="container">
+  <h1>Hello KrizVibe</h1>
+  <p>100% offline editor. Start typing or drop an HTML file anywhere.</p>
+  <button id="btn">Click Me</button>
+</div>`,
+  css: `body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+h1 { color: #00d4aa; font-size: 2.5rem; margin-bottom: 0.5rem; }
+p { color: #8b949e; margin-bottom: 1.5rem; }
+button {
+  background: linear-gradient(135deg, #00d4aa 0%, #00a888 100%);
+  color: #0a0d14;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+button:hover { transform: translateY(-2px); }`,
+  js: `document.getElementById("btn").addEventListener("click", () => {
+  console.log("Button clicked at", new Date().toLocaleTimeString());
+  alert("Welcome to KrizVibe Offline Editor!");
+});`
+};
+
+const codeModels = {
+  html: DEFAULT_CODE.html,
+  css: DEFAULT_CODE.css,
+  js: DEFAULT_CODE.js
+};
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function sanitizeFilename(name) {
+  const cleaned = String(name || "project")
+    .trim()
+    .replace(/[\/\\:*?"<>|\x00-\x1f]/g, "_")
+    .replace(/^\.+/, "")
+    .replace(/\s+/g, "-")
+    .slice(0, 100);
+  return cleaned || "project";
+}
+
+function safeStorageGet(key) {
+  try { return localStorage.getItem(key); }
+  catch (e) { return null; }
+}
+function safeStorageSet(key, value) {
+  try { localStorage.setItem(key, value); return true; }
+  catch (e) { return false; }
+}
+function safeStorageRemove(key) {
+  try { localStorage.removeItem(key); return true; }
+  catch (e) { return false; }
+}
+
+/* ============================================================
+   EDITOR
+============================================================ */
+const editor = document.getElementById("code-editor");
+const lineNumbers = document.getElementById("line-numbers");
+
+function updateLineNumbers() {
+  const count = editor.value.split("\n").length;
+  let html = "";
+  for (let i = 1; i <= count; i++) html += '<span class="ln">' + i + '</span>';
+  lineNumbers.innerHTML = html;
+}
+
+function syncScroll() { lineNumbers.scrollTop = editor.scrollTop; }
+
+function updateEditorUI() {
+  editor.value = codeModels[activeLang];
+  updateLineNumbers();
+  editor.scrollTop = 0;
+  editor.scrollLeft = 0;
+  syncScroll();
+  document.querySelectorAll(".tab").forEach((t) => {
+    const on = t.dataset.lang === activeLang;
+    t.classList.toggle("active", on);
+    t.setAttribute("aria-selected", on ? "true" : "false");
+  });
+}
+
+editor.addEventListener("input", () => {
+  codeModels[activeLang] = editor.value;
+  updateLineNumbers();
+  triggerUpdate();
+  scheduleDraftSave();
+});
+
+editor.addEventListener("scroll", syncScroll);
+
+editor.addEventListener("keydown", (e) => {
+  if (e.key === "Tab") {
+    e.preventDefault();
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = start + 2;
+    editor.dispatchEvent(new Event("input"));
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+    e.preventDefault();
+    saveProject();
+  }
+});
+
+document.querySelectorAll(".tab").forEach((tab, idx, arr) => {
+  tab.addEventListener("click", () => {
+    activeLang = tab.dataset.lang;
+    updateEditorUI();
+    saveSession();
+    editor.focus();
+  });
+  tab.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      const next = arr[(idx + 1) % arr.length];
+      next.focus(); next.click();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      const prev = arr[(idx - 1 + arr.length) % arr.length];
+      prev.focus(); prev.click();
+    }
+  });
+});
+
+/* ============================================================
+   DRAFT AUTOSAVE (survives tab close)
+============================================================ */
+function scheduleDraftSave() {
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(persistDraft, 400);
+}
+
+function persistDraft() {
+  const payload = {
+    html: codeModels.html,
+    css: codeModels.css,
+    js: codeModels.js,
+    name: filenameInput.value,
+    projectId: currentProjectId,
+    activeLang: activeLang,
+    updated: Date.now()
+  };
+  safeStorageSet(DRAFT_KEY, JSON.stringify(payload));
+}
+
+function restoreDraft() {
+  const raw = safeStorageGet(DRAFT_KEY);
+  if (!raw) return false;
+  try {
+    const d = JSON.parse(raw);
+    if (!d || typeof d !== "object") return false;
+    if (d.html !== undefined) codeModels.html = String(d.html);
+    if (d.css !== undefined)  codeModels.css  = String(d.css);
+    if (d.js !== undefined)   codeModels.js   = String(d.js);
+    if (d.name) filenameInput.value = String(d.name);
+    if (d.projectId) currentProjectId = String(d.projectId);
+    if (d.activeLang === "html" || d.activeLang === "css" || d.activeLang === "js") {
+      activeLang = d.activeLang;
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/* ============================================================
+   SESSION (last tab / project)
+============================================================ */
+function saveSession() {
+  safeStorageSet(SESSION_KEY, JSON.stringify({
+    activeLang: activeLang,
+    projectId: currentProjectId
+  }));
+}
+
+function restoreSession() {
+  const raw = safeStorageGet(SESSION_KEY);
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    if (!s) return;
+    if (s.activeLang === "html" || s.activeLang === "css" || s.activeLang === "js") {
+      activeLang = s.activeLang;
+    }
+  } catch (e) {}
+}
+
+/* ============================================================
+   PREVIEW
+============================================================ */
+function getCombinedCode() {
+  const html = codeModels.html;
+  const css = codeModels.css;
+  const js = codeModels.js;
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>${css}</style>
+</head>
+<body>
+${html}
+<script>
+(function(){
+  function send(level, args){
+    try {
+      var msg = Array.prototype.map.call(args, function(a){
+        try { return typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a); }
+        catch(e){ return String(a); }
+      }).join(' ');
+      parent.postMessage({ source:'krizvibe-preview', type:'console', level: level, message: msg }, '*');
+    } catch(e){}
+  }
+  var origLog = console.log, origErr = console.error, origWarn = console.warn, origInfo = console.info;
+  console.log = function(){ send('log', arguments); origLog.apply(console, arguments); };
+  console.error = function(){ send('error', arguments); origErr.apply(console, arguments); };
+  console.warn = function(){ send('warn', arguments); origWarn.apply(console, arguments); };
+  console.info = function(){ send('info', arguments); origInfo.apply(console, arguments); };
+  window.addEventListener('error', function(e){
+    send('error', [e.message + ' (line ' + e.lineno + ')']);
+  });
+})();
+<\/script>
+<script>${js}<\/script>
+</body>
+</html>`;
+}
+
+function updatePreview() {
+  document.getElementById("preview-frame").srcdoc = getCombinedCode();
+  const dot = document.getElementById("autosave-dot");
+  const text = document.getElementById("status-text");
+  dot.classList.remove("saving");
+  dot.classList.add("saved");
+  text.textContent = "Preview updated";
+}
+
+function triggerUpdate() {
+  const dot = document.getElementById("autosave-dot");
+  const text = document.getElementById("status-text");
+  dot.classList.add("saving");
+  dot.classList.remove("saved");
+  text.textContent = "Refreshing…";
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(updatePreview, 800);
+}
+
+document.getElementById("btn-run").addEventListener("click", updatePreview);
+
+document.getElementById("btn-open-new").addEventListener("click", () => {
+  const w = window.open("", "_blank");
+  if (!w) { showToast("Popup blocked", "Allow popups to open the preview in a new tab.", "warn"); return; }
+  try { w.opener = null; } catch (e) {}
+  w.document.open();
+  w.document.write(getCombinedCode());
+  w.document.close();
+});
+
+/* ============================================================
+   CONSOLE
+============================================================ */
+const consoleOutput = document.getElementById("console-output");
+
+window.addEventListener("message", (e) => {
+  const data = e.data;
+  if (!data || data.source !== "krizvibe-preview") return;
+  if (data.type === "console") {
+    const empty = consoleOutput.querySelector(".console-empty");
+    if (empty) empty.remove();
+    const line = document.createElement("div");
+    line.className = "console-line " + String(data.level || "log").replace(/[^a-z]/g, "");
+    const typeEl = document.createElement("span");
+    typeEl.className = "log-type";
+    typeEl.textContent = "[" + String(data.level || "log").toUpperCase() + "]";
+    const contentEl = document.createElement("span");
+    contentEl.className = "log-content";
+    contentEl.textContent = String(data.message == null ? "" : data.message);
+    line.appendChild(typeEl);
+    line.appendChild(contentEl);
+    consoleOutput.appendChild(line);
+    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+  }
+});
+
+document.getElementById("btn-clear-console").addEventListener("click", () => {
+  consoleOutput.innerHTML = '<div class="console-empty">Console output will appear here…</div>';
+});
+
+/* ============================================================
+   PROJECT MANAGEMENT
+============================================================ */
+const sidePanel = document.getElementById("side-panel");
+const sidePanelOverlay = document.getElementById("side-panel-overlay");
+const projectsList = document.getElementById("projects-list");
+const filenameInput = document.getElementById("filename-input");
+let lastFocusedBeforePanel = null;
+
+function openSidePanel() {
+  lastFocusedBeforePanel = document.activeElement;
+  sidePanel.classList.add("active");
+  sidePanelOverlay.classList.add("active");
+  sidePanel.setAttribute("aria-hidden", "false");
+  const closeBtn = document.getElementById("close-side");
+  if (closeBtn) closeBtn.focus();
+}
+function closeSidePanel() {
+  sidePanel.classList.remove("active");
+  sidePanelOverlay.classList.remove("active");
+  sidePanel.setAttribute("aria-hidden", "true");
+  if (lastFocusedBeforePanel && typeof lastFocusedBeforePanel.focus === "function") {
+    lastFocusedBeforePanel.focus();
+  }
+}
+
+document.getElementById("btn-projects").addEventListener("click", openSidePanel);
+document.getElementById("close-side").addEventListener("click", closeSidePanel);
+sidePanelOverlay.addEventListener("click", closeSidePanel);
+
+function getProjects() {
+  const raw = safeStorageGet(PROJECT_KEY);
+  if (!raw) return [];
+  try {
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    safeStorageRemove(PROJECT_KEY);
+    return [];
+  }
+}
+
+function saveProject() {
+  const rawName = filenameInput.value.trim();
+  const name = rawName || "Untitled";
+  const projects = getProjects();
+  const newProject = {
+    id: currentProjectId || Date.now().toString(),
+    name: name,
+    html: codeModels.html,
+    css: codeModels.css,
+    js: codeModels.js,
+    date: new Date().toLocaleString()
+  };
+  const idx = projects.findIndex((p) => p.id === newProject.id);
+  if (idx >= 0) projects[idx] = newProject;
+  else projects.unshift(newProject);
+
+  const ok = safeStorageSet(PROJECT_KEY, JSON.stringify(projects));
+  if (!ok) { showToast("Save failed", "localStorage is full or disabled.", "error"); return; }
+
+  currentProjectId = newProject.id;
+  renderProjects();
+  saveSession();
+  const dot = document.getElementById("autosave-dot");
+  dot.classList.add("saved");
+  document.getElementById("status-text").textContent = "Project saved";
+  setTimeout(() => dot.classList.remove("saved"), 1500);
+}
+
+document.getElementById("btn-save").addEventListener("click", saveProject);
+
+function renderProjects() {
+  const projects = getProjects();
+  projectsList.innerHTML = "";
+  if (projects.length === 0) {
+    const wrap = document.createElement("div");
+    wrap.className = "empty-projects";
+    wrap.innerHTML =
+      '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' +
+      '<div>No saved projects yet</div>';
+    projectsList.appendChild(wrap);
+    return;
+  }
+  projects.forEach((p) => {
+    const card = document.createElement("div");
+    card.className = "project-card";
+
+    const nameRow = document.createElement("div");
+    nameRow.className = "project-name";
+    const nameIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    nameIcon.setAttribute("viewBox", "0 0 24 24");
+    nameIcon.setAttribute("fill", "none");
+    nameIcon.setAttribute("stroke", "currentColor");
+    nameIcon.setAttribute("stroke-width", "2");
+    nameIcon.setAttribute("stroke-linecap", "round");
+    nameIcon.setAttribute("stroke-linejoin", "round");
+    nameIcon.setAttribute("aria-hidden", "true");
+    nameIcon.innerHTML = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>';
+    const nameText = document.createElement("span");
+    nameText.textContent = String(p.name || "Untitled");
+    nameRow.appendChild(nameIcon);
+    nameRow.appendChild(nameText);
+
+    const meta = document.createElement("div");
+    meta.className = "project-meta";
+    meta.textContent = String(p.date || "");
+
+    const actions = document.createElement("div");
+    actions.className = "project-actions";
+
+    const openBtn = document.createElement("button");
+    openBtn.className = "icon-btn";
+    openBtn.type = "button";
+    openBtn.textContent = "Open";
+    openBtn.setAttribute("aria-label", "Open project " + (p.name || "Untitled"));
+    openBtn.dataset.load = String(p.id);
+    openBtn.addEventListener("click", () => loadProject(String(p.id)));
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "icon-btn danger";
+    delBtn.type = "button";
+    delBtn.textContent = "Delete";
+    delBtn.setAttribute("aria-label", "Delete project " + (p.name || "Untitled"));
+    delBtn.dataset.del = String(p.id);
+    delBtn.addEventListener("click", () => deleteProject(String(p.id)));
+
+    actions.appendChild(openBtn);
+    actions.appendChild(delBtn);
+
+    card.appendChild(nameRow);
+    card.appendChild(meta);
+    card.appendChild(actions);
+    projectsList.appendChild(card);
+  });
+}
+
+function loadProject(id) {
+  const p = getProjects().find((x) => String(x.id) === String(id));
+  if (!p) { showToast("Project not found", "It may have been deleted.", "warn"); return; }
+  codeModels.html = String(p.html || "");
+  codeModels.css  = String(p.css  || "");
+  codeModels.js   = String(p.js   || "");
+  filenameInput.value = String(p.name || "Untitled");
+  currentProjectId = String(p.id);
+  updateEditorUI();
+  closeSidePanel();
+  updatePreview();
+  persistDraft();
+  saveSession();
+}
+
+function deleteProject(id) {
+  if (!confirm("Delete this project?")) return;
+  const projects = getProjects().filter((p) => String(p.id) !== String(id));
+  safeStorageSet(PROJECT_KEY, JSON.stringify(projects));
+  if (String(currentProjectId) === String(id)) {
+    currentProjectId = null;
+    codeModels.html = DEFAULT_CODE.html;
+    codeModels.css  = DEFAULT_CODE.css;
+    codeModels.js   = DEFAULT_CODE.js;
+    filenameInput.value = "untitled";
+    updateEditorUI();
+    updatePreview();
+    persistDraft();
+  }
+  renderProjects();
+  saveSession();
+}
+
+document.getElementById("btn-new").addEventListener("click", () => {
+  if (!confirm("Start new project? Unsaved changes will be lost.")) return;
+  codeModels.html = DEFAULT_CODE.html;
+  codeModels.css = DEFAULT_CODE.css;
+  codeModels.js = DEFAULT_CODE.js;
+  filenameInput.value = "untitled";
+  currentProjectId = null;
+  updateEditorUI();
+  updatePreview();
+  persistDraft();
+  saveSession();
+});
+
+/* ============================================================
+   DOWNLOAD / ABOUT
+============================================================ */
+document.getElementById("btn-download").addEventListener("click", () => {
+  const blob = new Blob([getCombinedCode()], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = sanitizeFilename(filenameInput.value) + ".html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+const aboutModal = document.getElementById("about-modal");
+const aboutModalBox = document.getElementById("about-modal-box");
+let lastFocusedBeforeModal = null;
+
+function openAboutModal() {
+  lastFocusedBeforeModal = document.activeElement;
+  aboutModal.classList.add("active");
+  aboutModal.setAttribute("aria-hidden", "false");
+  const closeBtn = document.getElementById("close-about");
+  if (closeBtn) closeBtn.focus();
+}
+function closeAboutModal() {
+  aboutModal.classList.remove("active");
+  aboutModal.setAttribute("aria-hidden", "true");
+  if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === "function") {
+    lastFocusedBeforeModal.focus();
+  }
+}
+
+document.getElementById("btn-about").addEventListener("click", openAboutModal);
+document.getElementById("close-about").addEventListener("click", closeAboutModal);
+aboutModal.addEventListener("click", (e) => { if (e.target === aboutModal) closeAboutModal(); });
+
+/* Focus trap in modal */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    if (aboutModal.classList.contains("active")) closeAboutModal();
+    if (sidePanel.classList.contains("active")) closeSidePanel();
+  }
+  if (e.key === "Tab" && aboutModal.classList.contains("active")) {
+    const focusables = aboutModalBox.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+});
+
+/* ============================================================
+   TOASTS
+============================================================ */
+function showToast(title, body, type, duration) {
+  type = type || "success";
+  duration = duration || 3200;
+  let container = document.querySelector(".toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "toast-container";
+    container.setAttribute("aria-live", "polite");
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement("div");
+  toast.className = "toast " + type;
+  const titleEl = document.createElement("div");
+  titleEl.className = "toast-title";
+  titleEl.textContent = String(title || "");
+  const bodyEl = document.createElement("div");
+  bodyEl.className = "toast-body";
+  bodyEl.textContent = String(body || "");
+  toast.appendChild(titleEl);
+  if (body) toast.appendChild(bodyEl);
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add("leaving");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+/* ============================================================
+   DRAG & DROP IMPORT
+============================================================ */
+const dropOverlay = document.getElementById("drop-overlay");
+
+function parseHtmlFile(raw) {
+  let html = String(raw);
+  const cssParts = [];
+  const jsParts = [];
+
+  html = html.replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, function (_, css) {
+    cssParts.push(css.trim());
+    return "";
+  });
+
+  html = html.replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, function (match, attrs, code) {
+    if (/\bsrc\s*=/.test(attrs)) return match;
+    if (code.trim()) jsParts.push(code.trim());
+    return "";
+  });
+
+  html = html.replace(/<link\b[^>]*rel\s*=\s*["']?stylesheet["']?[^>]*>/gi, "");
+  html = html.replace(/\n{3,}/g, "\n\n").trim();
+
+  return {
+    html: html,
+    css: cssParts.join("\n\n/* --- */\n\n"),
+    js: jsParts.join("\n\n/* --- */\n\n")
+  };
+}
+
+function routeFile(name, content) {
+  const lower = String(name).toLowerCase();
+
+  if (lower.endsWith(".html") || lower.endsWith(".htm")) {
+    const parsed = parseHtmlFile(content);
+    codeModels.html = parsed.html;
+    if (parsed.css) codeModels.css = parsed.css;
+    if (parsed.js) codeModels.js = parsed.js;
+    return { kind: "html" };
+  }
+  if (lower.endsWith(".css")) { codeModels.css = String(content); return { kind: "css" }; }
+  if (lower.endsWith(".js") || lower.endsWith(".mjs")) { codeModels.js = String(content); return { kind: "js" }; }
+  if (lower.endsWith(".json")) {
+    try {
+      const project = JSON.parse(content);
+      if (project && (project.html !== undefined || project.css !== undefined || project.js !== undefined)) {
+        codeModels.html = String(project.html || "");
+        codeModels.css  = String(project.css  || "");
+        codeModels.js   = String(project.js   || "");
+        if (project.name) filenameInput.value = String(project.name);
+        currentProjectId = null;
+        return { kind: "json-project" };
+      }
+    } catch (e) {}
+    return { kind: "unknown" };
+  }
+  return { kind: "unknown" };
+}
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = (e) => reject(e);
+    reader.readAsText(file);
+  });
+}
+
+function readDirectoryEntry(entry) {
+  return new Promise((resolve) => {
+    if (entry.isFile) {
+      entry.file((file) => resolve([file]), () => resolve([]));
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const allEntries = [];
+      const readBatch = () => {
+        reader.readEntries(async (entries) => {
+          if (entries.length === 0) {
+            const nested = await Promise.all(allEntries.map(readDirectoryEntry));
+            resolve(nested.flat());
+          } else {
+            allEntries.push(...entries);
+            readBatch();
+          }
+        }, () => resolve([]));
+      };
+      readBatch();
+    } else {
+      resolve([]);
+    }
+  });
+}
+
+async function collectFiles(dataTransfer) {
+  const files = [];
+  const items = dataTransfer.items;
+  if (items && items.length && items[0].webkitGetAsEntry) {
+    const entries = [];
+    for (let i = 0; i < items.length; i++) {
+      const entry = items[i].webkitGetAsEntry();
+      if (entry) entries.push(entry);
+    }
+    const groups = await Promise.all(entries.map(readDirectoryEntry));
+    groups.forEach((g) => files.push(...g));
+  } else if (dataTransfer.files) {
+    for (let i = 0; i < dataTransfer.files.length; i++) {
+      files.push(dataTransfer.files[i]);
+    }
+  }
+  return files;
+}
+
+async function handleDrop(dataTransfer) {
+  const files = await collectFiles(dataTransfer);
+  if (!files.length) {
+    showToast("Nothing imported", "No readable files found.", "warn");
+    return;
+  }
+
+  const priority = (name) => {
+    const l = String(name).toLowerCase();
+    if (l === "index.html" || l === "main.html") return 0;
+    if (l.endsWith(".html")) return 1;
+    if (l.endsWith(".css")) return 2;
+    if (l.endsWith(".js")) return 3;
+    if (l.endsWith(".json")) return 4;
+    return 5;
+  };
+  files.sort((a, b) => priority(a.name) - priority(b.name));
+
+  const summary = { html: 0, css: 0, js: 0, json: 0, unknown: 0, htmlName: null };
+
+  for (const file of files) {
+    try {
+      const content = await readFile(file);
+      const result = routeFile(file.name, content);
+      if (result.kind === "html") { summary.html++; summary.htmlName = file.name; }
+      else if (result.kind === "css") summary.css++;
+      else if (result.kind === "js")  summary.js++;
+      else if (result.kind === "json-project") summary.json++;
+      else summary.unknown++;
+    } catch (e) {
+      summary.unknown++;
+    }
+  }
+
+  updateEditorUI();
+  updatePreview();
+  persistDraft();
+  saveSession();
+
+  const parts = [];
+  if (summary.html) parts.push(summary.html + " HTML");
+  if (summary.css)  parts.push(summary.css + " CSS");
+  if (summary.js)   parts.push(summary.js + " JS");
+  if (summary.json) parts.push(summary.json + " project");
+  if (summary.unknown) parts.push(summary.unknown + " skipped");
+
+  const title = summary.json
+    ? "Project imported"
+    : summary.htmlName
+      ? "Imported " + summary.htmlName
+      : "Files imported";
+
+  const body = summary.html
+    ? "Style and script blocks were auto-split into their tabs."
+    : parts.join(" · ");
+
+  const toastType = (summary.unknown && !summary.html && !summary.css && !summary.js) ? "warn" : "success";
+  showToast(title, body, toastType);
+}
+
+let dragDepth = 0;
+
+window.addEventListener("dragenter", (e) => {
+  if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes("Files")) return;
+  e.preventDefault();
+  dragDepth++;
+  dropOverlay.classList.add("active");
+});
+
+window.addEventListener("dragover", (e) => {
+  if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes("Files")) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "copy";
+});
+
+window.addEventListener("dragleave", (e) => {
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (dragDepth === 0) dropOverlay.classList.remove("active");
+});
+
+window.addEventListener("drop", async (e) => {
+  if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes("Files")) return;
+  e.preventDefault();
+  dragDepth = 0;
+  dropOverlay.classList.remove("active");
+  await handleDrop(e.dataTransfer);
+});
+
+["dragover", "drop"].forEach((evt) => {
+  document.addEventListener(evt, (e) => {
+    if (e.dataTransfer && Array.from(e.dataTransfer.types).includes("Files")) {
+      e.preventDefault();
+    }
+  });
+});
+
+/* ============================================================
+   IMPORT BUTTON (discoverable alternative to drag & drop)
+============================================================ */
+const importBtn = document.createElement("button");
+importBtn.className = "btn";
+importBtn.id = "btn-import";
+importBtn.setAttribute("aria-label", "Import files");
+importBtn.title = "Import .html / .css / .js / .json";
+importBtn.innerHTML =
+  '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
+  '<span>Import</span>';
+const newBtn = document.getElementById("btn-new");
+newBtn.parentNode.insertBefore(importBtn, newBtn.nextSibling);
+
+importBtn.addEventListener("click", () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.multiple = true;
+  input.accept = ".html,.htm,.css,.js,.mjs,.json";
+  input.onchange = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const fakeDT = { files: files, items: null, types: ["Files"] };
+    await handleDrop(fakeDT);
+  };
+  input.click();
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+const restored = restoreDraft();
+if (!restored) {
+  restoreSession();
+  activeLang = activeLang || "html";
+}
+updateEditorUI();
+updatePreview();
+renderProjects();
+
+window.addEventListener("beforeunload", () => {
+  persistDraft();
+  saveSession();
+});
+
+window.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    persistDraft();
+    saveSession();
+  }
+});
+
+console.log("[KrizVibe] Offline editor initialised. Drag & drop + import ready.");
+</script>
+</body>
+</html>
