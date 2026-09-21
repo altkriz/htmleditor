@@ -5,36 +5,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- SEO Meta Tags -->
-  <title>KrizVibe Editor – AI-Powered Code Editor & Web Playground</title>
+  <!-- Primary SEO Meta Tags -->
+  <title>KrizVibe Editor – AI-Powered Web Code Editor & Live Playground</title>
+  <meta name="title" content="KrizVibe Editor – AI-Powered Web Code Editor & Live Playground" />
   <meta name="description"
-    content="KrizVibe Editor is an AI-powered HTML/CSS/JS playground with Monaco editor, local project saving, and KrizVibe AI for instant website generation." />
+    content="KrizVibe Editor is a modern, AI-powered HTML, CSS, and JavaScript playground with Monaco Editor, instant live previews, and automated vibe coding." />
   <meta name="keywords"
-    content="krizvibe, code editor, ai code editor, html css js playground, monaco editor, web editor, vibe coding, pollinations ai" />
+    content="krizvibe, code editor, ai code editor, html css js playground, monaco editor, vibe coding, web editor, online ide, instant code preview" />
+  <meta name="author" content="altkriz" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#06080c" />
   <link rel="canonical" href="https://altkriz.github.io/htmleditor/" />
 
-  <!-- Favicon -->
-  <link rel="icon" href="https://altkriz.github.io/img/icon.png" type="image/png" />
-  <link rel="shortcut icon" href="https://altkriz.github.io/htmleditor/img/icon.png" type="image/png" />
+  <!-- Standard Favicons & Web Icons -->
+  <link rel="shortcut icon" href="img/favicon.ico" />
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="img/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="img/android-chrome-512x512.png" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="KrizVibe Editor – AI-Powered Code Editor" />
-  <meta property="og:description"
-    content="Vibe coding with KrizVibe AI, Monaco-powered HTML/CSS/JS editor, and secure local project storage." />
   <meta property="og:url" content="https://altkriz.github.io/htmleditor/" />
-  <meta property="og:image" content="https://altkriz.github.io/htmleditor/img/logo.png" />
-  <meta property="og:image:type" content="image/png" />
+  <meta property="og:title" content="KrizVibe Editor – AI-Powered Web Code Editor & Live Playground" />
+  <meta property="og:description"
+    content="Vibe code instantly with KrizVibe AI, Monaco-powered HTML/CSS/JS editing, and instant sandboxed previews." />
+  <meta property="og:image" content="https://altkriz.github.io/htmleditor/img/android-chrome-512x512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
   <meta property="og:image:alt" content="KrizVibe Editor Logo" />
   <meta property="og:site_name" content="KrizVibe Editor" />
 
   <!-- Twitter / X Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="KrizVibe Editor – AI-Powered Code Editor" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:url" content="https://altkriz.github.io/htmleditor/" />
+  <meta name="twitter:title" content="KrizVibe Editor – AI-Powered Web Code Editor" />
   <meta name="twitter:description"
-    content="AI-powered HTML/CSS/JS playground with KrizVibe AI, Monaco editor, and local project saving." />
-  <meta name="twitter:image" content="https://altkriz.github.io/htmleditor/img/logo.png" />
-  <meta name="twitter:site" content="@altkriz" />
+    content="Instant AI web prototyping and live Monaco editor in your browser. Build websites with plain English prompts." />
+  <meta name="twitter:image" content="https://altkriz.github.io/htmleditor/img/android-chrome-512x512.png" />
+  <meta name="twitter:creator" content="@altkriz" />
+
+  <!-- Schema.org WebApplication JSON-LD (Search Engine Rich Snippet) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "KrizVibe Editor",
+    "url": "https://altkriz.github.io/htmleditor/",
+    "description": "Real-time AI-powered HTML, CSS, and JavaScript editor and web playground featuring Monaco editor, instant previews, and local project storage.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "creator": {
+      "@type": "Person",
+      "name": "altkriz",
+      "url": "https://github.com/altkriz"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -175,26 +210,19 @@
       letter-spacing: -0.3px;
     }
 
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: white;
-      box-shadow: 0 2px 12px var(--accent-glow);
-      position: relative;
-      overflow: hidden;
+    /* Updated Brand Image */
+    .brand-logo-img {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+      box-shadow: 0 2px 14px var(--accent-glow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease;
     }
 
-    .brand-icon::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+    .brand-logo-img:hover {
+      transform: scale(1.06);
     }
 
     .brand-label {
@@ -267,13 +295,6 @@
     .btn.primary:hover {
       background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%);
       box-shadow: 0 4px 24px var(--accent-glow);
-    }
-
-    .btn.primary::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
     }
 
     .icon-btn {
@@ -388,10 +409,6 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .tab i {
-      font-size: 14px;
-    }
-
     .editor-actions {
       margin-left: auto;
       display: flex;
@@ -501,10 +518,6 @@
     .window-dot.red { background: #ff5f57; }
     .window-dot.yellow { background: #febc2e; }
     .window-dot.green { background: #28c840; }
-
-    .preview-pane:hover .window-dot {
-      transform: scale(1.1);
-    }
 
     .url-bar {
       background: rgba(0, 0, 0, 0.4);
@@ -964,18 +977,14 @@
       background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
     }
 
-    .modal-logo {
+    .modal-logo-img {
       width: 48px;
       height: 48px;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
       border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: white;
-      margin-bottom: 20px;
+      object-fit: contain;
+      margin-bottom: 16px;
       box-shadow: var(--shadow-glow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .modal-title {
@@ -1067,7 +1076,7 @@
       }
     }
 
-    /* Scrollbar */
+    /* Scrollbars */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -1086,21 +1095,9 @@
       background: var(--text-muted);
     }
 
-    /* Selection */
     ::selection {
       background: var(--accent-glow);
       color: var(--text-main);
-    }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
     }
   </style>
 </head>
@@ -1113,9 +1110,8 @@
   <!-- Header -->
   <header class="app-header">
     <div class="brand">
-      <div class="brand-icon">
-        <i class="fa-solid fa-bolt"></i>
-      </div>
+      <!-- Standardized Brand Logo -->
+      <img src="img/android-chrome-192x192.png" alt="KrizVibe Logo" class="brand-logo-img" />
       <div class="brand-label">
         <span class="brand-name">KrizVibe Editor</span>
         <span class="brand-tag">AI-Powered Playground</span>
@@ -1190,7 +1186,7 @@
         <div id="monaco-host"></div>
       </div>
 
-      <!-- Preview Column -->
+      <!-- Preview Column (Isolated Sandbox) -->
       <div class="preview-pane">
         <div class="preview-header">
           <div class="window-dots">
@@ -1209,7 +1205,7 @@
           </div>
         </div>
         <div class="preview-frame-container">
-          <iframe id="preview-frame" sandbox="allow-scripts allow-modals allow-forms allow-same-origin"></iframe>
+          <iframe id="preview-frame" sandbox="allow-scripts allow-modals allow-forms"></iframe>
         </div>
       </div>
     </div>
@@ -1220,19 +1216,19 @@
         <div class="ai-title">
           <i class="fa-solid fa-wand-magic-sparkles"></i>
           KrizVibe AI Assistant
-          <span class="ai-badge">GPT-4</span>
+          <span class="ai-badge">Groq AI</span>
         </div>
         <i class="fa-solid fa-chevron-up ai-toggle-icon" id="ai-chevron"></i>
       </div>
       <div class="ai-content">
         <div class="chat-area" id="chat-area">
           <div class="chat-msg ai">
-            <strong>Welcome!</strong> I'm ready to help you build. Describe what you want to create (e.g., "A login form with glassmorphism dark theme").
+            <strong>Welcome!</strong> What are we building today? Type a prompt below to create or iterate on your website.
           </div>
         </div>
         <div class="chat-input-area">
           <input type="text" id="ai-input" placeholder="Ask KrizVibe to generate code..." autocomplete="off">
-          <button id="ai-send">
+          <button id="ai-send" title="Send Request">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
         </div>
@@ -1244,19 +1240,17 @@
   <!-- About Modal -->
   <div class="modal-overlay" id="about-modal">
     <div class="modal-box">
-      <div class="modal-logo">
-        <i class="fa-solid fa-bolt"></i>
-      </div>
+      <img src="img/android-chrome-192x192.png" alt="KrizVibe Logo" class="modal-logo-img" />
       <h2 class="modal-title">KrizVibe Editor</h2>
       <p class="modal-desc">
-        Experience the vibe of coding with KrizVibe, a real-time HTML, CSS, and JavaScript editor powered by AI. Build beautiful websites instantly with natural language prompts.
+        Experience seamless vibe coding with KrizVibe, an instant HTML, CSS, and JavaScript editor powered by AI. Generate and iterate on full web applications in real-time.
       </p>
       <div class="social-links">
-        <a href="https://github.com/altkriz" target="_blank" class="social-link">
+        <a href="https://github.com/altkriz" target="_blank" rel="noopener noreferrer" class="social-link">
           <i class="fa-brands fa-github"></i>
           GitHub
         </a>
-        <a href="https://x.com/altkriz" target="_blank" class="social-link">
+        <a href="https://x.com/altkriz" target="_blank" rel="noopener noreferrer" class="social-link">
           <i class="fa-brands fa-twitter"></i>
           Twitter
         </a>
@@ -1285,7 +1279,7 @@
       js: 'document.getElementById("btn").addEventListener("click", () => {\n  alert("Welcome to KrizVibe Editor!");\n});'
     };
 
-    // --- Initialization ---
+    // --- Monaco Initialization ---
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' } });
 
     require(['vs/editor/editor.main'], function () {
@@ -1312,7 +1306,6 @@
         bracketPairColorization: { enabled: true }
       });
 
-      // Define custom dark theme
       monaco.editor.defineTheme('krizvibe-dark', {
         base: 'vs-dark',
         inherit: true,
@@ -1345,7 +1338,7 @@
       loadProjectsFromStorage();
     });
 
-    // --- Tab Logic ---
+    // --- Tab Switching ---
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1365,20 +1358,18 @@
       const html = htmlModel.getValue();
       const css = cssModel.getValue();
       const js = jsModel.getValue();
-      return `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <style>${css}</style>
-        </head>
-        <body>
-          ${html}
-          <script>${js}<\/script>
-        </body>
-        </html>
-      `;
+      return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>${css}</style>
+</head>
+<body>
+  ${html}
+  <script>${js}<\/script>
+</body>
+</html>`;
     }
 
     function updatePreview() {
@@ -1403,7 +1394,7 @@
 
     document.getElementById('btn-run').addEventListener('click', updatePreview);
 
-    // --- AI Logic ---
+    // --- AI Assistant Logic ---
     const aiDrawer = document.getElementById('ai-drawer');
     const aiToggle = document.getElementById('ai-toggle');
     const aiInput = document.getElementById('ai-input');
@@ -1411,7 +1402,6 @@
     const chatArea = document.getElementById('chat-area');
 
     const AI_BACKEND_URL = 'https://kriztech.in/code/code.php';
-    const AI_SECRET_TOKEN = 'terebaapkatokenhaikyabsdk';
 
     aiToggle.addEventListener('click', () => {
       aiDrawer.classList.toggle('open');
@@ -1432,7 +1422,7 @@
       aiInput.disabled = true;
       aiSend.disabled = true;
 
-      addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating...');
+      addChatMsg('ai', '<i class="fa-solid fa-spinner fa-spin"></i> Generating code...');
 
       const systemPrompt = `You are KrizVibe AI, an expert web developer.
 Current Code:
@@ -1442,7 +1432,7 @@ JS: ${jsModel.getValue()}
 
 Request: ${text}
 
-Return ONLY code in this format:
+Return ONLY code in this exact format:
 [HTML]
 ...code...
 [CSS]
@@ -1454,8 +1444,7 @@ Return ONLY code in this format:
         const response = await fetch(AI_BACKEND_URL, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-KrizVibe-Token': AI_SECRET_TOKEN
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             messages: [
@@ -1465,21 +1454,26 @@ Return ONLY code in this format:
           })
         });
 
+        const data = await response.json().catch(() => ({}));
+
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `Server error: ${response.status}`);
+          throw new Error(data.error || `Server error (${response.status})`);
         }
 
-        const data = await response.json();
         if (data.error) throw new Error(data.error);
 
-        const reply = data.choices[0].message.content;
+        const reply = data.choices && data.choices[0] && data.choices[0].message 
+          ? data.choices[0].message.content 
+          : '';
+
+        if (!reply) throw new Error('Received an empty response from AI.');
+
         chatArea.removeChild(chatArea.lastChild);
         addChatMsg('ai', 'Code updated successfully!');
 
-        const htmlMatch = reply.match(/\[HTML\]([\s\S]*?)(\[CSS\]|$)/);
-        const cssMatch = reply.match(/\[CSS\]([\s\S]*?)(\[JS\]|$)/);
-        const jsMatch = reply.match(/\[JS\]([\s\S]*?)($)/);
+        const htmlMatch = reply.match(/\[HTML\]([\s\S]*?)(?=\[CSS\]|$)/i);
+        const cssMatch  = reply.match(/\[CSS\]([\s\S]*?)(?=\[JS\]|$)/i);
+        const jsMatch   = reply.match(/\[JS\]([\s\S]*?)$/i);
 
         if (htmlMatch && htmlMatch[1].trim()) htmlModel.setValue(htmlMatch[1].trim());
         if (cssMatch && cssMatch[1].trim()) cssModel.setValue(cssMatch[1].trim());
@@ -1488,8 +1482,8 @@ Return ONLY code in this format:
         updatePreview();
 
       } catch (err) {
-        chatArea.removeChild(chatArea.lastChild);
-        addChatMsg('ai', `<span style="color:#ef4444">Error: ${err.message}</span>`);
+        if (chatArea.lastChild) chatArea.removeChild(chatArea.lastChild);
+        addChatMsg('ai', `<span style="color:#ef4444"><i class="fa-solid fa-triangle-exclamation"></i> ${err.message}</span>`);
       } finally {
         aiInput.disabled = false;
         aiSend.disabled = false;
@@ -1506,9 +1500,11 @@ Return ONLY code in this format:
     }
 
     aiSend.addEventListener('click', sendMessage);
-    aiInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+    aiInput.addEventListener('keydown', (e) => { 
+      if (e.key === 'Enter') sendMessage(); 
+    });
 
-    // --- Project Management ---
+    // --- Project Storage ---
     const sidePanel = document.getElementById('side-panel');
     const sidePanelOverlay = document.getElementById('side-panel-overlay');
     const projectsList = document.getElementById('projects-list');
@@ -1631,7 +1627,7 @@ Return ONLY code in this format:
 
     function loadProjectsFromStorage() { renderProjects(); }
 
-    // --- Other Actions ---
+    // --- File Export & Modals ---
     document.getElementById('btn-download').addEventListener('click', () => {
       const blob = new Blob([getCombinedCode()], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -1655,7 +1651,6 @@ Return ONLY code in this format:
       if (e.target === aboutModal) aboutModal.classList.remove('active');
     });
 
-    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
