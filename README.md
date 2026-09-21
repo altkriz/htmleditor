@@ -1,185 +1,169 @@
 
+```markdown
+<p align="center">
+  <img src="img/krizvibebanner.png" alt="KrizVibe Editor Banner" width="100%" />
+</p>
+
 # ⚡ KrizVibe Editor — The Future of Vibe Coding with AI
 
-KrizVibe Editor is a next-generation **web-based coding environment** built for creators, learners, and developers who want to build websites visually, interactively, and intelligently.
+KrizVibe Editor is a next-generation **web-based coding playground and IDE** built for creators, learners, and developers who want to build websites visually, interactively, and intelligently.
 
-Powered by **KrizVibe AI** — our integrated AI website-generation assistant — the editor merges traditional hand-coding with AI-assisted “vibe coding”, enabling complete websites to be generated instantly and injected directly into HTML, CSS, and JavaScript editors.
+Powered by **KrizVibe AI** — our integrated AI web-generation assistant — the editor merges traditional hand-coding with modern **vibe coding**, enabling complete websites to be generated instantly and injected seamlessly into separate HTML, CSS, and JavaScript editors.
 
-KrizVibe Editor is **free**, **open-source**, and uses the **Pollinations OpenAI-compatible API** — no API key, no credit card, no rate limits..
+> 🚀 **Upgraded AI Engine:** KrizVibe Editor is now powered by the state-of-the-art **Groq AI API**, delivering ultra-low-latency generation speeds and superior code output. To maintain top-tier performance and availability for everyone, requests are protected by smart, fair-use rate limits.
 
 ---
 
 ## 🌟 Key Features
 
 ### 🧠 KrizVibe AI (Star Feature)
+KrizVibe AI is an integrated, automated AI assistant designed specifically for web generation.
 
-KrizVibe AI is the highlight of the entire editor. It is a fully integrated, automatic AI assistant built for modern web creation.
+- **Powered by Groq Cloud:** High-speed inference delivering responses in seconds.
+- **Strict Format Extraction:** Accurately outputs isolated `[HTML]`, `[CSS]`, and `[JS]` code blocks.
+- **One-Click Live Injection:** Automatically parses and injects generated code directly into the active Monaco models.
+- **Context-Aware:** Reads your existing code in the editor to modify and iterate without starting from scratch.
+- **Fair-Use Protection:** Enforces IP-level request limiting to protect proxy health and balance quotas.
 
-- Generates complete websites from simple English prompts  
-- Always returns perfectly structured `[HTML]`, `[CSS]`, `[JS]` blocks  
-- Automatically injects code into Monaco Editor  
-- Smooth docked AI panel with expandable animation  
-- Uses **Pollinations AI** — completely free and open  
-- Encourages creativity, rapid prototyping, and futuristic vibe coding  
-
-📸 Screenshot (KrizVibe AI Panel)
+📸 *Screenshot (KrizVibe AI Panel)*  
 ![KrizVibe AI](https://github.com/altkriz/htmleditor/blob/main/img/scr1.png)
 
 ---
 
 ### 📝 Triple Monaco Editor (HTML | CSS | JS)
+Built on the **same engine that powers VS Code**, Monaco Editor gives you a first-class developer experience in the browser:
 
-KrizVibe Editor uses the **same engine as VS Code** — Monaco Editor — delivering a professional coding experience directly in your browser.
+- Multi-tab support (`HTML`, `CSS`, `JS`)
+- Syntax highlighting and IntelliSense autocompletion
+- Dark theme inspired by obsidian-glow neon aesthetics
+- Bracket-pair colorization and automatic layout adjustments
 
-- Syntax highlighting  
-- IntelliSense-enabled  
-- Three separate tabs  
-- Instant live preview  
-
-📸 Screenshot (Editor Interface)
+📸 *Screenshot (Editor Interface)*  
 ![Editor Interface](https://github.com/altkriz/htmleditor/blob/main/img/scr1.png)
 
 ---
 
-### 💾 Local Project Saving (Secure and Private)
+### 💾 Local Project Saving (Private & Client-Side)
+All project data in KrizVibe Editor is saved locally using `localStorage`:
 
-All save features in KrizVibe Editor use **localStorage**, ensuring:
+- **Zero Cloud Tracking:** Your code never touches an external database.
+- **Auto-Drafting:** The editor remembers your current scratchpad on browser refresh.
+- **Project Drawer:** Save, load, download, or delete multiple workspace drafts anytime.
 
-- No servers  
-- No cloud  
-- Zero tracking  
-- Maximum privacy  
-
-Users can:
-
-- Save unlimited projects locally  
-- Auto-save drafts automatically  
-- Load/update projects  
-- Delete saved sessions  
-
-📸 Screenshot (Project Panel)
+📸 *Screenshot (Project Panel)*  
 ![Local Save Panel](https://github.com/altkriz/htmleditor/blob/main/img/scr1.png)
 
 ---
 
-### 📌 Additional Features
-
-- Real-time live preview (auto updates)
-- Download code as `.html` file
-- Open preview in a new tab
-- Responsive layout (desktop priority, mobile supported)
-- Modern UI with glass effects
-- About page with social links
-- Sidepanel for project management
-
-**Note:** The editor requires an internet connection for Monaco Editor CDN, Font Awesome, Google Fonts, and the AI features powered by Pollinations API.
+### 🛡️ Sandboxed Live Preview & Security
+- **Hardened Iframe:** The live preview runs in an isolated `sandbox="allow-scripts allow-modals allow-forms"` environment without `allow-same-origin`, preventing untrusted preview code from accessing your parent browser storage.
+- **Instant Hot-Reload:** Edits update the preview frame automatically with debounced autosaving.
+- **Independent Tab Preview:** Test your builds in a full browser tab with one click.
+- **Direct HTML Export:** Download your combined, standalone `.html` bundle instantly.
 
 ---
 
-## 🤖 KrizVibe AI — How It Works
-
-KrizVibe AI uses the Pollinations OpenAI-Compatible endpoint to generate structured web code.
-
-### Example API Request:
-```json
-{
-  "model": "openai",
-  "temperature": 1.0,
-  "max_tokens": 1500,
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are KrizVibe AI, a professional website-generation assistant. Always output exactly three sections using [HTML], [CSS], [JS] — no explanations."
-    },
-    {
-      "role": "user",
-      "content": "Create a landing page with a hero, features, and footer."
-    }
-  ]
-}
-````
-
-### Expected Response Format:
+## 🤖 How KrizVibe AI Works (Architecture & Limits)
 
 ```
+┌─────────────────────────┐          POST (Payload)          ┌───────────────────────────┐          API Request          ┌─────────────────┐
+│   KrizVibe Editor       │ ───────────────────────────────> │  Hardened PHP Proxy       │ ────────────────────────────> │   Groq Cloud    │
+│  (GitHub Pages Client)  │ <─────────────────────────────── │  (kriztech.in/code.php)   │ <──────────────────────────── │  (GPT-OSS-20B)  │
+└─────────────────────────┘          Stream / JSON           └───────────────────────────┘          Raw AI Tokens        └─────────────────┘
+                                                                       │
+                                                                       ▼
+                                                          [ IP Rate Limiting & Filter ]
+```
+
+### Why a Backend Proxy?
+Because KrizVibe Editor's frontend is statically hosted on GitHub Pages, our production **Groq API key** is secured behind a remote PHP backend proxy (`https://kriztech.in/code/code.php`). 
+
+### Fair-Use Limits & Fair Play
+To ensure everyone can build without crashing upstream capacity or exhausting balance allocations:
+- **Rate Limit:** Capped at a rolling quota of **6 requests per minute per IP**.
+- **Payload Caps:** Prompt inputs are capped at 10,000 characters to prevent prompt-stuffing abuse.
+- **Strict Origin Policy:** Direct access is restricted to verified domains.
+
+### Response Parsing Format
+The AI returns structured code envelopes:
+```text
 [HTML]
-<!-- html code here -->
+<main>
+  <h1>Hello from Groq AI</h1>
+</main>
 
 [CSS]
-/* css code here */
+body { background: #06080c; color: #fff; }
 
 [JS]
-// javascript here
+console.log("KrizVibe initialized!");
 ```
 
-KrizVibe Editor automatically extracts these 3 sections and inserts them directly into the Monaco editor.
+KrizVibe Editor splits these blocks via regex and updates the respective editor tabs seamlessly.
 
 ---
 
 ## 🚀 Why KrizVibe Editor?
 
-Because coding should feel fun, creative, and frictionless.
+Traditional online sandboxes are either cluttered with paywalls or lack built-in generative AI capabilities. 
 
 KrizVibe Editor merges:
+* The **blazing inference speed of Groq**,
+* The **familiar editing experience of Monaco/VS Code**,
+* The **security of client-side sandboxing and local storage**,
+* The **clean aesthetics of a modern, responsive IDE**,
 
-* the **power of AI**,
-* the **precision of real code**,
-* the **beauty of a modern UI**,
-* the **freedom of an offline tool**,
-
-into one seamless vibe-driven workflow.
-
-Whether you're learning or rapidly prototyping, KrizVibe AI transforms your ideas into real interfaces instantly.
+into an intuitive, distraction-free environment.
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Getting Started & Hosting
 
-No installation required — simply open `index.html` in any modern browser.
+No complex build steps or node modules required — open `index.html` directly in any modern web browser.
 
-To host online, upload the files to:
-
-* GitHub Pages
-* Netlify
-* Vercel
-* Your own server
-
-Everything is static. No backend required.
+To host your own copy:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/altkriz/htmleditor.git
+   ```
+2. Deploy the static frontend files to **GitHub Pages**, **Vercel**, or **Netlify**.
+3. Configure your own proxy endpoint in `index.html` under `AI_BACKEND_URL` if you prefer to use your personal Groq API keys.
 
 ---
 
 ## 💚 Powered By
 
-* Monaco Editor
-* Pollinations AI
-* HTML, CSS & Vanilla JS
-* FontAwesome Icons
+* [Monaco Editor](https://microsoft.github.io/monaco-editor/) — VS Code browser engine
+* [Groq Cloud](https://groq.com/) — Next-generation high-speed AI inference
+* [FontAwesome](https://fontawesome.com/) — Vector iconography
+* [Google Fonts](https://fonts.google.com/) — Space Grotesk & JetBrains Mono
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome!
-If you want to improve vibe coding or the KrizVibe AI workflow, open an issue or PR.
+Contributions, issues, and feature requests are welcome!  
+Feel free to check the [Issues page](https://github.com/altkriz/htmleditor/issues) if you have suggestions for new features or vibe coding improvements.
 
 ---
 
 ## 📜 License
 
-MIT License — free to use, modify, and evolve.
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
-## 🌐 Connect
+## 🌐 Connect & Author
 
-* Twitter/X: [https://x.com/altkriz](https://x.com/altkriz)
-* Instagram: [https://instagram.com/altkriz](https://instagram.com/altkriz)
-* GitHub: [https://github.com/altkriz](https://github.com/altkriz)
-* Website: [https://altkriz.github.io/](https://altkriz.github.io/)
+* **Author:** altkriz
+* **Website:** [altkriz.github.io](https://altkriz.github.io/)
+* **X (Twitter):** [@altkriz](https://x.com/altkriz)
+* **Instagram:** [@altkriz](https://instagram.com/altkriz)
+* **GitHub:** [@altkriz](https://github.com/altkriz)
 
 ---
 
-🎉 **Enjoy the future of Vibe Coding with KrizVibe Editor.**
-
+<p align="center">
+  Built with ⚡ by <a href="https://github.com/altkriz">altkriz</a> — Keep the vibe coding alive!
+</p>
 ```
-
