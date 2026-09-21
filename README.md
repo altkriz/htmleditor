@@ -64,41 +64,11 @@ All project data in KrizVibe Editor is saved locally using `localStorage`:
 
 ## 🤖 How KrizVibe AI Works (Architecture & Limits)
 
-```
-┌─────────────────────────┐          POST (Payload)          ┌───────────────────────────┐          API Request          ┌─────────────────┐
-│   KrizVibe Editor       │ ───────────────────────────────> │  Hardened PHP Proxy       │ ────────────────────────────> │   Groq Cloud    │
-│  (GitHub Pages Client)  │ <─────────────────────────────── │  (kriztech.in/code.php)   │ <──────────────────────────── │  (GPT-OSS-20B)  │
-└─────────────────────────┘          Stream / JSON           └───────────────────────────┘          Raw AI Tokens        └─────────────────┘
-                                                                       │
-                                                                       ▼
-                                                          [ IP Rate Limiting & Filter ]
-```
-
-### Why a Backend Proxy?
-Because KrizVibe Editor's frontend is statically hosted on GitHub Pages, our production **Groq API key** is secured behind a remote PHP backend proxy (`https://kriztech.in/code/code.php`). 
-
 ### Fair-Use Limits & Fair Play
 To ensure everyone can build without crashing upstream capacity or exhausting balance allocations:
 - **Rate Limit:** Capped at a rolling quota of **6 requests per minute per IP**.
 - **Payload Caps:** Prompt inputs are capped at 10,000 characters to prevent prompt-stuffing abuse.
 - **Strict Origin Policy:** Direct access is restricted to verified domains.
-
-### Response Parsing Format
-The AI returns structured code envelopes:
-```text
-[HTML]
-<main>
-  <h1>Hello from Groq AI</h1>
-</main>
-
-[CSS]
-body { background: #06080c; color: #fff; }
-
-[JS]
-console.log("KrizVibe initialized!");
-```
-
-KrizVibe Editor splits these blocks via regex and updates the respective editor tabs seamlessly.
 
 ---
 
