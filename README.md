@@ -3,7 +3,7 @@
   <img src="img/krizvibebanner.png" alt="KrizVibe Editor Banner" width="100%" />
 </p>
 
-# ⚡ KrizVibe Editor — The Future of Vibe Coding with AI
+# ⚡ KrizVibe Editor |The Future of Vibe Coding with AI
 
 KrizVibe Editor is a next-generation **web-based coding playground and IDE** built for creators, learners, and developers who want to build websites visually, interactively, and intelligently.
 
