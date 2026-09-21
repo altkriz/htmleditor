@@ -1,5 +1,4 @@
 
-```markdown
 <p align="center">
   <img src="img/krizvibebanner.png" alt="KrizVibe Editor Banner" width="100%" />
 </p>
@@ -166,4 +165,4 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 <p align="center">
   Built with ⚡ by <a href="https://github.com/altkriz">altkriz</a> — Keep the vibe coding alive!
 </p>
-```
+
